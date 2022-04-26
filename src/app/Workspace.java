@@ -28,10 +28,10 @@ public class Workspace {
             return "Momentálně nejsou načteny žádné skladby.";
         }
         else {
-            StringBuilder sb = new StringBuilder(String.format("Momentálně je načteno %d skladeb:", audioFiles.size()));
-            for (ITagEditable audioFile : audioFiles) {
-                sb.append("\n");
-                sb.append(audioFile);
+            StringBuilder sb = new StringBuilder(String.format("Momentálně je načteno %d skladeb:", audioFiles.size()));            
+            for (int i = 1; i <= audioFiles.size(); i++) {
+                sb.append(String.format("%n%02d. ", i));
+                sb.append(audioFiles.get(i - 1));
             }
             return sb.toString();
         }

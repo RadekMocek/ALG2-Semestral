@@ -2,6 +2,8 @@
 
 ## Zadání práce
 
+Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspace naimportuje mp3 soubory, se kterými bude chtít nějakým způsobem pracovat. Program bude nabízet operace pro jednotlivé soubory (editace tagu, výpis informací, přejmenování podle tagu a obráceně, ...) a hromadné operace pro všechny soubory ve workspace (generace m3u souboru, hromadné přejmenování, ...). Pro zjednodušení se pracuje pouze s ID3V2 tagy: číslo stopy, skladba, interpret, album a rok.
+
 ## Návrh řešení
 
 ## Externí knihovna
@@ -30,11 +32,10 @@
    3. `utils` – pomocné třídy např. vlastní výjimky, vlastní rozhraní
 9. Programování vůči rozhraní a použití vlastního rozhraní
    * Rozhraní "ITagEditable" by měla implementovat každá třída reprezentující audio soubor, u kterého je možné měnit tagy; díky tomu by teoreticky mohla být přidána podpora pro další formáty
-10. Použití java.time API pro práci s časem
-    * Neměl by být problém, čas se používá u délky skladby
+10. Použití java.time API pro práci s časem ✓
 11. Použít enum typ
     * ???
-12. Použití kontejnerové třídy jazyka Java (ArrayList, LinkedList, HashMap ...) z Collections frameworku.
+12. Použití kontejnerové třídy jazyka Java (ArrayList, LinkedList, HashMap ...) z Collections frameworku. ✓
     * Třída Workspace má kolekci objektů typu AudioFile
 13. Alespoň dvě možnosti třídění s využitím rozhraní Comparable a Comparator
     * Sortování AudioFiles ve Workspace podle různých parametrů

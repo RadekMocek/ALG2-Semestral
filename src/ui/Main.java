@@ -1,12 +1,15 @@
 package ui;
 
 import app.Workspace;
+import java.util.Scanner;
 
 /**
  * Poskytuje uživatelské rozhraní
  * @author Radek Mocek
  */
 public class Main {
+    
+    private static Scanner sc;
     
     private static Workspace ws;
     
@@ -17,13 +20,31 @@ public class Main {
     public static void main(String[] args) {
         // Pozdrav
         System.out.println("Dobrý den");
-        // Inicializace
-        ws = new Workspace();
         
-        // TEST        
-        openFolder();
-        displayWsContent();
-               
+        // Inicializace
+        sc = new Scanner(System.in);
+        ws = new Workspace();
+        String input;
+        
+        // Hlavní smyčka
+        while (true) {
+            displayWsContent();
+            System.out.println("Zadejte příkaz ('help' zobrazí nápovědu):");
+            input = sc.nextLine();
+            // Reakce na příkazy
+            // - help
+            if (input.substring(0, 4).equals("help")) {
+                displayHelp();
+            }
+            // - open folder gui
+            else if (input.substring(0, 4).equals("open")) {                
+                openFolderGUI();
+            }
+            // - exit
+            else if (input.substring(0, 4).equals("exit")) {                
+                System.exit(0);
+            }
+        }        
     }
 
     // ########################
@@ -33,8 +54,15 @@ public class Main {
     /**
      * Vytiskne menu s funkcemi aplikace
      */
-    private static void displayMenu() {
-        System.out.println("Menu");
+//    private static void displayMenu() {
+//        System.out.println("Menu");
+//    }
+    
+    /**
+     * Zobrazí nápovědu
+     */
+    private static void displayHelp() {
+        System.out.println("nápověda");
     }
     
     /**
@@ -51,10 +79,11 @@ public class Main {
     /**
      * Umožní uživateli grafický výběr složky s hudbou, která se "importuje" do workspace
      */
-    private static void openFolder() {
+    private static void openFolderGUI() {
         String path = FileDialog.selectFolderGUI();
         if (path == null) {
             System.out.println("Výběr složky byl zrušen.");
+            return;
         }
         ws.openFolder(path);
     }

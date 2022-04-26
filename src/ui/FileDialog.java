@@ -1,6 +1,9 @@
 package ui;
 
+import java.awt.Component;
+import java.awt.HeadlessException;
 import java.io.File;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
 /**
@@ -15,7 +18,16 @@ public class FileDialog {
      */
     static String selectFolderGUI() {
         // Instance JFileChooser, která umožní uživateli jednoduše vybrat soubor (adresář)
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser() {
+            // Po použití Scanner.nextLine se focus nastaví na konzoli a následně zavolané dialogy se nezobrazí (alespoň v netbeans ne)
+            // tímto kódem se dá problém obejít (https://stackoverflow.com/questions/28141885/jfilechooser-showsavedialog-not-showing-up)
+            @Override
+            protected JDialog createDialog(Component parent) throws HeadlessException {
+                JDialog jDialog = super.createDialog(parent);
+                jDialog.setAlwaysOnTop(true);
+                return jDialog;
+            }
+        };
         // Počáteční adresář chooseru je ten, kde se nachází aplikace
         fc.setCurrentDirectory(new File("."));
         // Nastavení hlavičky okna

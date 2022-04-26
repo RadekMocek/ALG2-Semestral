@@ -1,5 +1,6 @@
 package app;
 
+import utils.TimeTools;
 import com.mpatric.mp3agic.*;
 import java.io.IOException;
 import utils.ITagEditable;
@@ -34,9 +35,17 @@ public class AudioFile implements ITagEditable {
         String artist = tag.getArtist();
         String year = tag.getYear();
         String album = tag.getAlbum();
+        
         String trackNum = tag.getTrack();
-        String title = tag.getTitle();
-        return String.format("%-20.20s %-5.5s %-20.20s %3s. %-20s", artist, year, album, trackNum, title);
+        if (trackNum.contains("/")) trackNum = trackNum.split("/")[0];
+        
+        String title = tag.getTitle();        
+        String absolutepath = file.getFilename();
+        
+        long seconds = file.getLengthInSeconds();
+        String duration = TimeTools.longToString(seconds);
+                
+        return String.format("%-20.20s %-5.5s %-20.20s %3s. %-40s %8s %s", artist, year, album, trackNum, title, duration, absolutepath);        
     }    
     
 }
