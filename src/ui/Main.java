@@ -29,20 +29,23 @@ public class Main {
         // Hlavní smyčka
         while (true) {
             displayWsContent();
-            System.out.println("Zadejte příkaz ('help' zobrazí nápovědu):");
+            System.out.println("Zadejte příkaz ('help' zobrazí nápovědu):");            
             input = sc.nextLine();
-            // Reakce na příkazy
+            // Reakce na příkazy            
             // - help
-            if (input.substring(0, 4).equals("help")) {
+            if (input.equals("help")) {
                 displayHelp();
             }
             // - open folder gui
-            else if (input.substring(0, 4).equals("open")) {                
+            else if (input.equals("open")) {                
                 openFolderGUI();
             }
             // - exit
-            else if (input.substring(0, 4).equals("exit")) {                
+            else if (input.equals("exit")) {                
                 System.exit(0);
+            }
+            else {
+                System.out.println("Neznámý příkaz");
             }
         }        
     }
@@ -50,19 +53,19 @@ public class Main {
     // ########################
     // ### Metody pro výpis ###
     // ########################
-        
-    /**
-     * Vytiskne menu s funkcemi aplikace
-     */
-//    private static void displayMenu() {
-//        System.out.println("Menu");
-//    }
     
     /**
      * Zobrazí nápovědu
      */
     private static void displayHelp() {
-        System.out.println("nápověda");
+        String help = """
+                      * 'open'  – Přidat nové soubory do workspace
+                      * 'all'   – Provést akci pro všechny soubory ve workspace
+                      * Napsání čísla skladby – provést akci pro jeden konkrétní soubor (první číslo na každém řádku ve workspace)
+                      * 'clear' – Odebere soubory z workspace
+                      * 'exit'  – Ukončí aplikaci
+                      Konec nápovědy""";
+        System.out.println(help);
     }
     
     /**

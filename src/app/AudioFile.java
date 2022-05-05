@@ -12,6 +12,7 @@ import utils.ITagEditable;
 public class AudioFile implements ITagEditable {
 
     private Mp3File file;
+    private ID3v2 tag;
     
     /**
      * Konstruktor
@@ -20,32 +21,72 @@ public class AudioFile implements ITagEditable {
     public AudioFile(String path) {
         try {
             file = new Mp3File(path);
+            tag = file.getId3v2Tag();
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
             System.out.println("Chyba č.1: " + ex);
         }
     }
-
+    
+    // ###############
+    // ### Gettery ###
+    // ###############
+    
     /**
-     * Vrací zformátovaný String pro výpis informací získaných z tagů souboru
+     * Vrací název umělce uložený v ID3v2 tagu
      * @return String
      */
     @Override
-    public String toString() {
-        ID3v2 tag = file.getId3v2Tag();
+    public String getArtist() {
+        return tag.getArtist();
+    }
+    
+    /**
+     * Vrací název alba uložený v ID3v2 tagu
+     * @return String
+     */
+    @Override
+    public String getAlbum() {
+        return tag.getAlbum();
+    }
+    
+    /**
+     * Vrací název skladby uložený v ID3v2 tagu
+     * @return String
+     */
+    @Override
+    public String getTitle() {
+        return tag.getTitle();
+    }
+    
+    // ########################
+    // ### Metody pro výpis ###
+    // ########################    
+    
+    /**
+     * Vrací zformátovaný String pro výpis informací získaných z tagů souboru
+     * @param artistLen
+     * @param albumLen
+     * @param titleLen
+     * @return String
+     */   
+    @Override
+    public String toStringFormatted(int artistLen, int albumLen, int titleLen) {        
+        //ID3v2 tag = file.getId3v2Tag();
         String artist = tag.getArtist();
         String year = tag.getYear();
         String album = tag.getAlbum();
         
         String trackNum = tag.getTrack();
-        if (trackNum.contains("/")) trackNum = trackNum.split("/")[0];
+        if (trackNum != null && trackNum.contains("/")) trackNum = trackNum.split("/")[0];
         
         String title = tag.getTitle();        
         String absolutepath = file.getFilename();
         
         long seconds = file.getLengthInSeconds();
         String duration = TimeTools.longToString(seconds);
-                
-        return String.format("%-20.20s %-5.5s %-20.20s %3s. %-40s %8s %s", artist, year, album, trackNum, title, duration, absolutepath);        
+              
+        String format = "%-" + artistLen + "s %-5.5s %-" + albumLen + "s %3s. %-" + titleLen + "s %8s %s";
+        return String.format(format, artist, year, album, trackNum, title, duration, absolutepath);        
     }    
     
 }
