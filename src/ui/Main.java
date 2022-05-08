@@ -2,58 +2,116 @@ package ui;
 
 import app.Workspace;
 import java.util.Scanner;
+import utils.StringTools;
 
 /**
  * Poskytuje uživatelské rozhraní
  * @author Radek Mocek
  */
 public class Main {
-    
+
     private static Scanner sc;
-    
+
     private static Workspace ws;
-    
+
+    private static int chosenTrack = -1;
+
     /**
      * Hlavní UI metoda, která by se měla zapnout, když se zapne program
-     * @param args 
+     * @param args
      */
     public static void main(String[] args) {
         // Pozdrav
         System.out.println("Dobrý den");
-        
+
         // Inicializace
         sc = new Scanner(System.in);
         ws = new Workspace();
         String input;
-        
+
         // Hlavní smyčka
         while (true) {
             displayWsContent();
-            System.out.println("Zadejte příkaz ('help' zobrazí nápovědu):");            
+            System.out.println("Zadejte příkaz ('help' zobrazí nápovědu):");
             input = sc.nextLine();
-            // Reakce na příkazy            
+            // Reakce na příkazy
+            // - číslo skladby
+            if (StringTools.tryParseToInt(input)) {
+                int numberOfTracks = ws.getNumberOfTracks();
+                if (numberOfTracks == 0) {
+                    System.out.println("Momentálně nejsou načteny žádné skladby, není tedy z čeho vybírat.");
+                }
+                else {
+                    int temp = Integer.parseInt(input);
+                    if (temp >= 1 && temp <= numberOfTracks) {
+                        chosenTrack = Integer.parseInt(input);
+                        submenuOneTrack();
+                    }
+                    else {
+                        System.out.println("Skladba s takovým číslem ve workspace není. Zadejte číslo v rozsahu 1 až " + numberOfTracks + ".");
+                    }
+                }
+            }
             // - help
-            if (input.equals("help")) {
+            else if (input.equals("help")) {
                 displayHelp();
             }
             // - open folder gui
-            else if (input.equals("open")) {                
+            else if (input.equals("open")) {
                 openFolderGUI();
             }
             // - exit
-            else if (input.equals("exit")) {                
+            else if (input.equals("exit")) {
                 System.exit(0);
             }
             else {
                 System.out.println("Neznámý příkaz");
             }
-        }        
+        }
+    }
+
+    // ###############
+    // ### Submenu ###
+    // ###############
+
+    /**
+     * Zobrazí menu s dostupnými akcemi pro jednu skladbu
+     */
+    private static void submenuOneTrack() {
+        String menu = """
+                      1. Změnit interpreta
+                      2. Změnit rok
+                      3. Změnit album
+                      4. Změnit číslo stopy
+                      5. Změnit skladbu
+                      6. Přejmenovat podle tagu
+                      7. Změnit tagy podle názvu souboru
+                      0. Zpět""";
+
+        while (true) {
+            System.out.println("Vybraná skladba:");
+            System.out.println(ws.getPrintableFile(chosenTrack));
+            System.out.println(menu);
+            String input = sc.nextLine();
+            if (StringTools.tryParseToInt(input)) {
+                int actionNumber = Integer.parseInt(input);
+                if (actionNumber == 0) {
+                    break;
+                }
+                else {
+                    System.out.println("Akce s takovým číslem neexistuje.");
+                }
+            }
+            else {
+                System.out.println("Zadejte číslo akce, kterou chcete provést.");
+            }
+        }
     }
 
     // ########################
     // ### Metody pro výpis ###
     // ########################
-    
+
     /**
      * Zobrazí nápovědu
      */
@@ -64,21 +122,22 @@ public class Main {
                       * Napsání čísla skladby – provést akci pro jeden konkrétní soubor (první číslo na každém řádku ve workspace)
                       * 'clear' – Odebere soubory z workspace
                       * 'exit'  – Ukončí aplikaci
-                      Konec nápovědy""";
+                      Stiskněte enter pro ukončení nápovědy""";
         System.out.println(help);
+        sc.nextLine();
     }
-    
+
     /**
      * Vytiskne všechny mp3 soubory, které se aktuálně nachází ve workspace
      */
     private static void displayWsContent() {
-        System.out.println(ws.getContent());
+        System.out.println(ws.getPrintableContent());
     }
-    
+
     // #################################
     // ### Metody pro import souborů ###
     // #################################
-    
+
     /**
      * Umožní uživateli grafický výběr složky s hudbou, která se "importuje" do workspace
      */
@@ -90,5 +149,5 @@ public class Main {
         }
         ws.openFolder(path);
     }
-    
+
 }
