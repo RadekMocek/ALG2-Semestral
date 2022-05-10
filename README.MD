@@ -12,6 +12,10 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 
 ---
 
+![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)
+
+---
+
 ## Požadavky
 
 ### Funkční a technické požadavky na aplikaci

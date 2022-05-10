@@ -29,6 +29,10 @@ public class Main {
         ws = new Workspace();
         String input;
 
+        // Z testovacích důvodů
+        ws.openFolder("D:\\Kod\\ALG2\\Semestral\\testData2");
+        // --------------------
+
         // Hlavní smyčka
         while (true) {
             displayWsContent();
@@ -87,16 +91,21 @@ public class Main {
                       6. Přejmenovat podle tagu
                       7. Změnit tagy podle názvu souboru
                       0. Zpět""";
-
+        String input;
         while (true) {
             System.out.println("Vybraná skladba:");
             System.out.println(ws.getPrintableFile(chosenTrack));
             System.out.println(menu);
-            String input = sc.nextLine();
+            input = sc.nextLine();
             if (StringTools.tryParseToInt(input)) {
                 int actionNumber = Integer.parseInt(input);
                 if (actionNumber == 0) {
                     break;
+                }
+                else if (actionNumber == 1) {
+                    System.out.println("Zadejte nový název pro interpreta:");
+                    input = sc.nextLine();
+                    changeArtist(input);
                 }
                 else {
                     System.out.println("Akce s takovým číslem neexistuje.");
@@ -148,6 +157,18 @@ public class Main {
             return;
         }
         ws.openFolder(path);
+    }
+
+    // ####################
+    // ### Editace tagů ###
+    // ####################
+
+    /**
+     * Tag – změna interpreta
+     * @param newArtist String, nový název interpreta
+     */
+    private static void changeArtist(String newArtist) {
+        ws.changeArtist(chosenTrack, newArtist);
     }
 
 }

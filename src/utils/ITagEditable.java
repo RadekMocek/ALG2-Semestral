@@ -5,13 +5,15 @@ package utils;
  * @author Radek Mocek
  */
 public interface ITagEditable {
-    
+
     public String getArtist();
-    
+
     public String getAlbum();
-    
+
     public String getTitle();
-    
+
     public String toStringFormatted(int artistLen, int albumLen, int titleLen);
-    
+
+    public void changeArtist(String newArtist);
+
 }

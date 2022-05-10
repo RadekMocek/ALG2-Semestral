@@ -40,9 +40,9 @@ public class Workspace {
             int maxArtistLen = 0, maxAlbumLen = 0, maxTitleLen = 0;
 
             for (ITagEditable af : audioFiles) {
-                int artistLen = af.getArtist().length();
-                int albumLen = af.getAlbum().length();
-                int titleLen = af.getTitle().length();
+                int artistLen = (af.getArtist() == null) ? 4 : af.getArtist().length();
+                int albumLen = (af.getAlbum() == null) ? 4 : af.getAlbum().length();
+                int titleLen = (af.getTitle() == null) ? 4 : af.getTitle().length();
                 if (artistLen > maxArtistLen) maxArtistLen = artistLen;
                 if (albumLen > maxAlbumLen) maxAlbumLen = albumLen;
                 if (titleLen > maxTitleLen) maxTitleLen = titleLen;
@@ -73,6 +73,11 @@ public class Workspace {
     public void openFolder(String path) {
         File[] listOfFiles = new File(path).listFiles();
 
+        if (listOfFiles == null) {
+            System.out.println("Chyba: Neplatná cesta.");
+            return;
+        }
+
         for (File file : listOfFiles) {
             if (file.isFile()) {
                 String fileName = file.getName();
@@ -81,11 +86,24 @@ public class Workspace {
                         audioFiles.add(new AudioFile(file.getAbsolutePath()));
                     }
                     catch (IllegalArgumentException ex) {
-                        System.out.println("Chyba č.2: Soubor '" + fileName + "' nemohl být načten: " + ex);
+                        System.out.println("Chyba: Soubor '" + fileName + "' nemohl být načten: " + ex);
                     }
                 }
             }
         }
+    }
+
+    // ####################
+    // ### Editace tagů ###
+    // ####################
+
+    /**
+     * Změní tag interpreta u vybrané skladby
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     * @param newArtist String, nový název interpreta
+     */
+    public void changeArtist(int userIndex, String newArtist) {
+        audioFiles.get(userIndex - 1).changeArtist(newArtist);
     }
 
 }

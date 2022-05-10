@@ -3,6 +3,10 @@ package app;
 import utils.TimeTools;
 import com.mpatric.mp3agic.*;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import utils.ITagEditable;
 
 /**
@@ -19,11 +23,22 @@ public class AudioFile implements ITagEditable {
      * @param path Absolutní cesta k mp3 souboru (String)
      */
     public AudioFile(String path) {
+        // Inicializace souboru
         try {
             file = new Mp3File(path);
+        }
+        catch (IOException | UnsupportedTagException | InvalidDataException ex) {
+            System.out.println("Chyba: Soubor '" + path + "' nelze inicializovat: " + ex);
+            return;
+        }
+
+        // Inicializace tagu
+        if (file.hasId3v2Tag()) {
             tag = file.getId3v2Tag();
-        } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
-            System.out.println("Chyba č.1: " + ex);
+        }
+        else {
+            tag = new ID3v24Tag();
+            file.setId3v2Tag(tag);
         }
     }
 
@@ -72,11 +87,19 @@ public class AudioFile implements ITagEditable {
     @Override
     public String toStringFormatted(int artistLen, int albumLen, int titleLen) {
         String artist = tag.getArtist();
+
         String year = tag.getYear();
+        if (year == null) year = "-";
+
         String album = tag.getAlbum();
 
         String trackNum = tag.getTrack();
-        if (trackNum != null && trackNum.contains("/")) trackNum = trackNum.split("/")[0];
+        if (trackNum != null) {
+            if (trackNum.contains("/")) trackNum = trackNum.split("/")[0];
+        }
+        else {
+            trackNum = "-";
+        }
 
         String title = tag.getTitle();
         String absolutePath = file.getFilename();
@@ -109,6 +132,36 @@ public class AudioFile implements ITagEditable {
                       Skladba   : %s
                       """.formatted(absolutePath, artist, year, album, trackNum, title);
         return rtrn;
+    }
+
+    // ####################
+    // ### Editace tagů ###
+    // ####################
+
+    /**
+     * Změní název intepreta
+     * @param newArtist String, nový název interpreta
+     */
+    @Override
+    public void changeArtist(String newArtist) {
+        tag.setArtist(newArtist);
+        saveTags();
+
+    }
+
+    /**
+     * Uloží tagy do nového souboru, ten pak přejmenuje na název toho starého a tím ho přepíše
+     */
+    private void saveTags() {
+        try {
+            String tempFilename = file.getFilename() + "edited";
+            file.save(tempFilename);
+            Path source = Paths.get(tempFilename);
+            Files.move(source, source.resolveSibling(file.getFilename()), StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException | NotSupportedException | IllegalArgumentException ex) {
+            System.out.println("Chyba při ukládání tagu: " + ex);
+        }
     }
 
 }
