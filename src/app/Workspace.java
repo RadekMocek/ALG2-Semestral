@@ -1,6 +1,9 @@
 package app;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import utils.ITagEditable;
@@ -78,6 +81,8 @@ public class Workspace {
             return;
         }
 
+        List<String> errorFiles = new ArrayList<>();
+
         for (File file : listOfFiles) {
             if (file.isFile()) {
                 String fileName = file.getName();
@@ -85,11 +90,15 @@ public class Workspace {
                     try {
                         audioFiles.add(new AudioFile(file.getAbsolutePath()));
                     }
-                    catch (IllegalArgumentException ex) {
-                        System.out.println("Chyba: Soubor '" + fileName + "' nemohl být načten: " + ex);
+                    catch (IOException | UnsupportedTagException | InvalidDataException | IllegalArgumentException ex) {
+                        errorFiles.add(fileName);
                     }
                 }
             }
+        }
+
+        if(!errorFiles.isEmpty()){
+            throw new RuntimeException("Chyba: Soubory " + errorFiles.toString() + " nebylo možné načíst.");
         }
     }
 

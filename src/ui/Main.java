@@ -30,7 +30,7 @@ public class Main {
         String input;
 
         // Z testovacích důvodů
-        ws.openFolder("D:\\Kod\\ALG2\\Semestral\\testData2");
+        try {ws.openFolder("D:\\Kod\\ALG2\\Semestral\\testData2");}catch(RuntimeException ex){System.out.println(ex.getMessage());}
         // --------------------
 
         // Hlavní smyčka
@@ -156,7 +156,12 @@ public class Main {
             System.out.println("Výběr složky byl zrušen.");
             return;
         }
-        ws.openFolder(path);
+        try {
+            ws.openFolder(path);
+        }
+        catch (RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     // ####################
@@ -168,7 +173,12 @@ public class Main {
      * @param newArtist String, nový název interpreta
      */
     private static void changeArtist(String newArtist) {
-        ws.changeArtist(chosenTrack, newArtist);
+        try {
+            ws.changeArtist(chosenTrack, newArtist);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
 }

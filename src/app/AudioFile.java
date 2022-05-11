@@ -21,17 +21,14 @@ public class AudioFile implements ITagEditable {
     /**
      * Konstruktor
      * @param path Absolutní cesta k mp3 souboru (String)
+     * @throws com.mpatric.mp3agic.UnsupportedTagException
+     * @throws java.io.IOException
+     * @throws com.mpatric.mp3agic.InvalidDataException
+     * @throws java.lang.IllegalArgumentException
      */
-    public AudioFile(String path) {
+    public AudioFile(String path) throws UnsupportedTagException, IOException, InvalidDataException, IllegalArgumentException {
         // Inicializace souboru
-        try {
-            file = new Mp3File(path);
-        }
-        catch (IOException | UnsupportedTagException | InvalidDataException ex) {
-            System.out.println("Chyba: Soubor '" + path + "' nelze inicializovat: " + ex);
-            return;
-        }
-
+        file = new Mp3File(path);
         // Inicializace tagu
         if (file.hasId3v2Tag()) {
             tag = file.getId3v2Tag();
@@ -40,6 +37,7 @@ public class AudioFile implements ITagEditable {
             tag = new ID3v24Tag();
             file.setId3v2Tag(tag);
         }
+
     }
 
     // ###############
@@ -160,7 +158,7 @@ public class AudioFile implements ITagEditable {
             Files.move(source, source.resolveSibling(file.getFilename()), StandardCopyOption.REPLACE_EXISTING);
         }
         catch (IOException | NotSupportedException | IllegalArgumentException ex) {
-            System.out.println("Chyba při ukládání tagu: " + ex);
+            throw new RuntimeException("Chyba při ukládání tagu: " + ex);
         }
     }
 
