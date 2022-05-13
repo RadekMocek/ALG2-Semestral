@@ -1,13 +1,16 @@
 package app;
 
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.NotSupportedException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import utils.TimeTools;
-import com.mpatric.mp3agic.*;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import utils.ITagEditable;
+import utils.TagField;
 
 /**
  * Třída uchovávající jeden mp3 soubor a umožňující editaci jeho tagů
@@ -37,7 +40,10 @@ public class AudioFile implements ITagEditable {
             tag = new ID3v24Tag();
             file.setId3v2Tag(tag);
         }
-
+        // S ID3v1 tagy nevyjednáváme ((these days doporučuje se buď jim nastavovat identickou hodnotu jako v2 tagům, nebo je smazat))
+        if (file.hasId3v1Tag()) {
+            file.removeId3v1Tag();
+        }
     }
 
     // ###############
@@ -77,9 +83,9 @@ public class AudioFile implements ITagEditable {
 
     /**
      * Vrací zformátovaný String s informacemi z tagu souboru pro výpis více skladeb pod sebou
-     * @param artistLen
-     * @param albumLen
-     * @param titleLen
+     * @param artistLen int, Počet znaků interpreta s nejdelším názvem ve výpisu
+     * @param albumLen int, Počet znaků alba s nejdelším názvem ve výpisu
+     * @param titleLen int, Počet znaků skladby s nejdelším názvem ve výpisu
      * @return String
      */
     @Override
@@ -111,7 +117,7 @@ public class AudioFile implements ITagEditable {
 
     /**
      * Vrací zformátovaný String s informacemi z tagu souboru pro výpis jedné konkrétní skladby
-     * @return
+     * @return String
      */
     @Override
     public String toString() {
@@ -142,24 +148,83 @@ public class AudioFile implements ITagEditable {
      */
     @Override
     public void changeArtist(String newArtist) {
-        tag.setArtist(newArtist);
+        if ("".equals(newArtist)) {
+            clearTagFieldValue(TagField.artist);
+        }
+        else {
+            tag.setArtist(newArtist);
+        }
         saveTags();
-
+    }
+    @Override
+    public void changeYear(String newYear) {
+        if ("".equals(newYear)) {clearTagFieldValue(TagField.year);}
+        else {tag.setYear(newYear);}
+        saveTags();
+    }
+    @Override
+    public void changeAlbum(String newAlbum) {
+        if ("".equals(newAlbum)) {clearTagFieldValue(TagField.album);}
+        else {tag.setAlbum(newAlbum);}
+        saveTags();
+    }
+    @Override
+    public void changeTrackNum(String changeTrackNum) {
+        if ("".equals(changeTrackNum)) {clearTagFieldValue(TagField.trackNum);}
+        else {tag.setTrack(changeTrackNum);}
+        saveTags();
+    }
+    @Override
+    public void changeTitle(String newTitle) {
+        if ("".equals(newTitle)) {clearTagFieldValue(TagField.title);}
+        else {tag.setTitle(newTitle);}
+        saveTags();
     }
 
     /**
-     * Uloží tagy do nového souboru, ten pak přejmenuje na název toho starého a tím ho přepíše
+     * Pomocná metoda pro odstranění hodnoty z tagu, protože knihovna (nejspíš) neumožňuje prostě zavolat např <code>setAlbum("")</code> nebo <code>setAlbum(null)</code>
+     * @param field enum, Která hodnota má být odstraněna
+     */
+    private void clearTagFieldValue(TagField field) {
+        ID3v2 newTag = new ID3v24Tag();
+        if (field != TagField.artist) newTag.setArtist(tag.getArtist());
+        if (field != TagField.year) newTag.setYear(tag.getYear());
+        if (field != TagField.album) newTag.setAlbum(tag.getAlbum());
+        if (field != TagField.trackNum) newTag.setTrack(tag.getTrack());
+        if (field != TagField.title) newTag.setTitle(tag.getTitle());
+        tag = newTag;
+        file.setId3v2Tag(tag);
+        saveTags();
+    }
+
+    /**
+     * Pomocná metoda pro permanentní uložení tagu
      */
     private void saveTags() {
         try {
-            String tempFilename = file.getFilename() + "edited";
-            file.save(tempFilename);
-            Path source = Paths.get(tempFilename);
-            Files.move(source, source.resolveSibling(file.getFilename()), StandardCopyOption.REPLACE_EXISTING);
-        }
-        catch (IOException | NotSupportedException | IllegalArgumentException ex) {
+            retag();
+        } catch (IOException | NotSupportedException ex) {
             throw new RuntimeException("Chyba při ukládání tagu: " + ex);
+        } catch (IllegalArgumentException ex) {
+            renameFiles();
         }
+    }
+
+    private void retag() throws IOException, NotSupportedException {
+        file.save(file.getFilename() + ".retag");
+        renameFiles();
+    }
+
+    private void renameFiles() {
+        String filename = file.getFilename();
+        File originalFile = new File(filename);
+        File backupFile = new File(filename + ".bak");
+        File retaggedFile = new File(filename + ".retag");
+        if (backupFile.exists()) {
+            backupFile.delete();
+        }
+        originalFile.renameTo(backupFile);
+        retaggedFile.renameTo(originalFile);
     }
 
 }

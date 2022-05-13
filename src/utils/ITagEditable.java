@@ -15,5 +15,9 @@ public interface ITagEditable {
     public String toStringFormatted(int artistLen, int albumLen, int titleLen);
 
     public void changeArtist(String newArtist);
+    public void changeYear(String newYear);
+    public void changeAlbum(String newAlbum);
+    public void changeTrackNum(String changeTrackNum);
+    public void changeTitle(String newTitle);
 
 }

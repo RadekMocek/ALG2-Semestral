@@ -2,7 +2,7 @@
 
 ## Zadání práce
 
-Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspace naimportuje mp3 soubory, se kterými bude chtít nějakým způsobem pracovat. Program bude nabízet operace pro jednotlivé soubory (editace tagu, výpis informací, přejmenování podle tagu a obráceně, ...) a hromadné operace pro všechny soubory ve workspace (generace m3u souboru, hromadné přejmenování, ...). Pro zjednodušení se pracuje pouze s ID3V2 tagy: číslo stopy, skladba, interpret, album a rok.
+Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspace naimportuje mp3 soubory, se kterými bude chtít nějakým způsobem pracovat. Program bude nabízet operace pro jednotlivé soubory (editace tagu, výpis informací, přejmenování podle tagu a obráceně, ...) a hromadné operace pro všechny soubory ve workspace (výpis do txt, hromadné přejmenování, ...). Pro zjednodušení se pracuje pouze s ID3V2 tagy: číslo stopy, skladba, interpret, album a rok.
 
 ## Návrh řešení
 
@@ -16,6 +16,23 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 
 ---
 
+## // TODO
+
+* ~~Editace všech tagů pro jeden soubor~~
+* Přejmenování podle tagu a vice versa
+* Hromadná editace/přejmenování
+* ~~Použít enum typ~~
+* Více možností pro přidávání/odebírání souborů z workspace
+* Sortování
+* Práce s textovými a binárními soubory
+  * Výpis do txt
+  * mp3 cut (?)
+
+## Known issues
+
+* Občas se při ukládání změny tagu vyhodí IllegalArgumentException se zprávou `newLimit < 0: (-1 < 0)` (???)
+  * Vyřešeno pomocí speciálního catch (snad)
+
 ## Požadavky
 
 ### Funkční a technické požadavky na aplikaci
@@ -25,20 +42,18 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 3. Načítání vstupních dat z minimálně dvou souborů
    * Vstupní data jsou samotné mp3 soubory
 4. Zápis výstupních dat do souboru
-   * Výpis informací do txt souboru, popřípadě generace m3u souboru
 5. Možnosť práce s textovými a binárními soubory (alespoň někde)
-   * mp3, txt, (m3u), ...
+   * mp3, txt, ...
 6. Ideálně využití reálných otevřených dat
 7. Adresář data se všemi datovými soubory a případně třídu Datastore se statickými metodami, které budou poskytovat další statická data.
 8. Tri balíčky:
    1. `ui` – třídy, tvořící uživatelské rozhraní - komunikaci s uživatelem
    2. `app` – třídy, tvořící logiku s daty aplikácie - modely, kontrolery
    3. `utils` – pomocné třídy např. vlastní výjimky, vlastní rozhraní
-9. Programování vůči rozhraní a použití vlastního rozhraní
+9. Programování vůči rozhraní a použití vlastního rozhraní ✓
    * Rozhraní "ITagEditable" by měla implementovat každá třída reprezentující audio soubor, u kterého je možné měnit tagy; díky tomu by teoreticky mohla být přidána podpora pro další formáty
 10. Použití java.time API pro práci s časem ✓
-11. Použít enum typ
-    * ???
+11. Použít enum typ ✓
 12. Použití kontejnerové třídy jazyka Java (ArrayList, LinkedList, HashMap ...) z Collections frameworku. ✓
     * Třída Workspace má kolekci objektů typu AudioFile
 13. Alespoň dvě možnosti třídění s využitím rozhraní Comparable a Comparator

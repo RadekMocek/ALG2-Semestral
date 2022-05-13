@@ -86,6 +86,7 @@ public class Workspace {
         for (File file : listOfFiles) {
             if (file.isFile()) {
                 String fileName = file.getName();
+                // .mp3
                 if (fileName.matches("(.*)\\.mp3")) {
                     try {
                         audioFiles.add(new AudioFile(file.getAbsolutePath()));
@@ -113,6 +114,18 @@ public class Workspace {
      */
     public void changeArtist(int userIndex, String newArtist) {
         audioFiles.get(userIndex - 1).changeArtist(newArtist);
+    }
+    public void changeYear(int userIndex, String newYear) {
+        audioFiles.get(userIndex - 1).changeYear(newYear);
+    }
+    public void changeAlbum(int userIndex, String newAlbum) {
+        audioFiles.get(userIndex - 1).changeAlbum(newAlbum);
+    }
+    public void changeTrackNum(int userIndex, String newTrackNum) {
+        audioFiles.get(userIndex - 1).changeTrackNum(newTrackNum);
+    }
+    public void changeTitle(int userIndex, String newTitle) {
+        audioFiles.get(userIndex - 1).changeTitle(newTitle);
     }
 
 }

@@ -8,8 +8,8 @@ import java.time.Duration;
  */
 public final class TimeTools {
 
-    private TimeTools() {}    
-    
+    private TimeTools() {}
+
     /**
      * Pro zadaný počet vteřin vrátí String ve formátu "(hh):(m)m:ss", který je často používaný v hudebním software a je youtube-timestamp-friendly
      * @param totalSeconds long, počet vteřin
@@ -19,12 +19,12 @@ public final class TimeTools {
         if (totalSeconds < 0) {
             return "0:00";
         }
-        
+
         Duration duration = Duration.ofSeconds(totalSeconds);
         long hoursLong = duration.toHours();
         long minutesLong = duration.toMinutesPart();
         long secondsLong = duration.toSecondsPart();
-        
+
         String hours = (hoursLong == 0) ? "" : Long.toString(hoursLong) + ":";
         String minutes = Long.toString(minutesLong);
         if (hoursLong != 0 && minutes.length() == 1) {
@@ -36,11 +36,13 @@ public final class TimeTools {
         }
         return String.format("%s%s:%s", hours, minutes, seconds);
     }
-    
+
     // --------------------------------------
     // Testovací účely
+    /*
     public static void main(String[] args) {
-        long l = 3661;        
+        long l = 3661;
         System.out.println(longToString(l));
     }
+    */
 }

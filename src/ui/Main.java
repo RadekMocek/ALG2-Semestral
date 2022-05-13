@@ -103,9 +103,29 @@ public class Main {
                     break;
                 }
                 else if (actionNumber == 1) {
-                    System.out.println("Zadejte nový název pro interpreta:");
+                    System.out.println("Zadejte nový název interpreta (ponechte prázdné pro odstranění hodnoty z tagu):");
                     input = sc.nextLine();
                     changeArtist(input);
+                }
+                else if (actionNumber == 2) {
+                    System.out.println("Zadejte nový rok (ponechte prázdné pro odstranění hodnoty z tagu):");
+                    input = sc.nextLine();
+                    changeYear(input);
+                }
+                else if (actionNumber == 3) {
+                    System.out.println("Zadejte nový název alba (ponechte prázdné pro odstranění hodnoty z tagu):");
+                    input = sc.nextLine();
+                    changeAlbum(input);
+                }
+                else if (actionNumber == 4) {
+                    System.out.println("Zadejte nové číslo stopy (ponechte prázdné pro odstranění hodnoty z tagu):");
+                    input = sc.nextLine();
+                    changeTrackNum(input);
+                }
+                else if (actionNumber == 5) {
+                    System.out.println("Zadejte nový název skladby (ponechte prázdné pro odstranění hodnoty z tagu):");
+                    input = sc.nextLine();
+                    changeTitle(input);
                 }
                 else {
                     System.out.println("Akce s takovým číslem neexistuje.");
@@ -128,6 +148,7 @@ public class Main {
         String help = """
                       * 'open'  – Přidat nové soubory do workspace
                       * 'all'   – Provést akci pro všechny soubory ve workspace
+                      * 'sort'  – Seřadit soubory ve workspace
                       * Napsání čísla skladby – provést akci pro jeden konkrétní soubor (první číslo na každém řádku ve workspace)
                       * 'clear' – Odebere soubory z workspace
                       * 'exit'  – Ukončí aplikaci
@@ -175,6 +196,38 @@ public class Main {
     private static void changeArtist(String newArtist) {
         try {
             ws.changeArtist(chosenTrack, newArtist);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    private static void changeYear(String newYear) {
+        try {
+            ws.changeYear(chosenTrack, newYear);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    private static void changeAlbum(String newAlbum) {
+        try {
+            ws.changeAlbum(chosenTrack, newAlbum);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    private static void changeTrackNum(String newTrackNum) {
+        try {
+            ws.changeTrackNum(chosenTrack, newTrackNum);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    private static void changeTitle(String newTitle) {
+        try {
+            ws.changeTitle(chosenTrack, newTitle);
         }
         catch(RuntimeException ex) {
             System.out.println(ex.getMessage());
