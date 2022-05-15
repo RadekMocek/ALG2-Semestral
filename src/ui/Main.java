@@ -1,6 +1,7 @@
 package ui;
 
 import app.Workspace;
+import java.io.IOException;
 import java.util.Scanner;
 import utils.StringTools;
 
@@ -35,7 +36,7 @@ public class Main {
 
         // Hlavní smyčka
         while (true) {
-            displayWsContent();
+            System.out.println(ws.getPrintableContent());
             System.out.println("Zadejte příkaz ('help' zobrazí nápovědu):");
             input = sc.nextLine();
             // Reakce na příkazy
@@ -55,6 +56,18 @@ public class Main {
                         System.out.println("Skladba s takovým číslem ve workspace není. Zadejte číslo v rozsahu 1 až " + numberOfTracks + ".");
                     }
                 }
+            }
+            // - all
+            else if (input.equals("all")) {
+                submenuAllTracks();
+            }
+            // - sort
+            else if (input.equals("sort")) {
+
+            }
+            // - clear
+            else if (input.equals("clear")) {
+                ws.clearWorkspace();
             }
             // - help
             else if (input.equals("help")) {
@@ -79,7 +92,7 @@ public class Main {
     // ###############
 
     /**
-     * Zobrazí menu s dostupnými akcemi pro jednu skladbu
+     * Menu s dostupnými akcemi pro jednu skladbu
      */
     private static void submenuOneTrack() {
         String menu = """
@@ -89,7 +102,7 @@ public class Main {
                       4. Změnit číslo stopy
                       5. Změnit skladbu
                       6. Přejmenovat podle tagu
-                      7. Změnit tagy podle názvu souboru
+                      7. Odebrat soubor z workspace
                       0. Zpět""";
         String input;
         while (true) {
@@ -127,6 +140,61 @@ public class Main {
                     input = sc.nextLine();
                     changeTitle(input);
                 }
+                else if (actionNumber == 6) {
+                    System.out.println("Zadejte pattern pro přejmenování (použijte /i /y /a /n /t):");
+                    input = sc.nextLine();
+                    rename(input);
+                    break;
+                }
+                else if (actionNumber == 7) {
+                    ws.removeFromWorkspace(chosenTrack);
+                    break;
+                }
+                else {
+                    System.out.println("Akce s takovým číslem neexistuje.");
+                }
+            }
+            else {
+                System.out.println("Zadejte číslo akce, kterou chcete provést.");
+            }
+        }
+    }
+
+    /**
+     * Menu s dostupnými akcemi pro všechny skladby
+     */
+    private static void submenuAllTracks() {
+        String menu = """
+                      1. Hromadně změnit interpreta
+                      2. Hromadně změnit rok
+                      3. Hromadně změnit album
+                      4. Hromadně přejmenovat podle tagů
+                      5. Vygenerovat popis pro youtube
+                      0. Zpět""";
+        String input;
+        while (true) {
+            System.out.println(menu);
+            input = sc.nextLine();
+            if (StringTools.tryParseToInt(input)) {
+                int actionNumber = Integer.parseInt(input);
+                if (actionNumber == 0) {
+                    break;
+                }
+                else if (actionNumber == 1) {
+
+                }
+                else if (actionNumber == 2) {
+
+                }
+                else if (actionNumber == 3) {
+
+                }
+                else if (actionNumber == 4) {
+
+                }
+                else if (actionNumber == 5) {
+
+                }
                 else {
                     System.out.println("Akce s takovým číslem neexistuje.");
                 }
@@ -155,13 +223,6 @@ public class Main {
                       Stiskněte enter pro ukončení nápovědy""";
         System.out.println(help);
         sc.nextLine();
-    }
-
-    /**
-     * Vytiskne všechny mp3 soubory, které se aktuálně nachází ve workspace
-     */
-    private static void displayWsContent() {
-        System.out.println(ws.getPrintableContent());
     }
 
     // #################################
@@ -233,5 +294,29 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+    // ####################
+    // ### Přejmenování ###
+    // ####################
+
+    /**
+     * Přejmenování souboru
+     * @param pattern String
+     */
+    private static void rename(String pattern) {
+        try {
+            ws.rename(chosenTrack, pattern);
+        } catch (IOException ex) {
+            System.out.println("Chyba při přejmenování souboru: " + ex);
+        }
+    }
+
+    // #################
+    // ### Sortování ###
+    // #################
+
+    /// ######################
+    /// ### Ostatní metody ###
+    /// ######################
 
 }

@@ -46,17 +46,50 @@ public class AudioFile implements ITagEditable {
         }
     }
 
+    /**
+     * Při přejmenování souboru je potřeba aktualizovat jeho cestu, aby bylo možné ho dále editovat
+     * @param newFileName String
+     */
+    @Override
+    public void updatePath(String newFileName) {
+        try {
+            String oldPath = file.getFilename();
+            file = new Mp3File(oldPath.substring(0, oldPath.lastIndexOf(File.separator)) + "/" + newFileName);
+            tag = file.getId3v2Tag();
+        } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
+            throw new RuntimeException("Chyba při aktulaizování cesty k souboru.");
+        }
+    }
+
     // ###############
     // ### Gettery ###
     // ###############
 
     /**
-     * Vrací název umělce uložený v ID3v2 tagu
+     * Vratí cestu k souboru
+     * @return String
+     */
+    @Override
+    public String getAbsolutePath() {
+        return file.getFilename();
+    }
+
+    /**
+     * Vrací název interpreta uložený v ID3v2 tagu
      * @return String
      */
     @Override
     public String getArtist() {
         return tag.getArtist();
+    }
+
+    /**
+     * Vrací rok uložený v ID3v2 tagu
+     * @return String
+     */
+    @Override
+    public String getYear() {
+        return tag.getYear();
     }
 
     /**
@@ -66,6 +99,15 @@ public class AudioFile implements ITagEditable {
     @Override
     public String getAlbum() {
         return tag.getAlbum();
+    }
+
+    /**
+     * Vrací číslo skladby uložené v ID3v2 tagu
+     * @return String
+     */
+    @Override
+    public String getTrackNum() {
+        return tag.getTrack();
     }
 
     /**
@@ -106,6 +148,7 @@ public class AudioFile implements ITagEditable {
         }
 
         String title = tag.getTitle();
+
         String absolutePath = file.getFilename();
 
         long seconds = file.getLengthInSeconds();
@@ -218,13 +261,18 @@ public class AudioFile implements ITagEditable {
     private void renameFiles() {
         String filename = file.getFilename();
         File originalFile = new File(filename);
-        File backupFile = new File(filename + ".bak");
+        //File backupFile = new File(filename + ".bak");
         File retaggedFile = new File(filename + ".retag");
+        File oldFile = new File(filename + ".old");
+        /*
         if (backupFile.exists()) {
             backupFile.delete();
         }
         originalFile.renameTo(backupFile);
+        */
+        originalFile.renameTo(oldFile);
         retaggedFile.renameTo(originalFile);
+        oldFile.delete();
     }
 
 }

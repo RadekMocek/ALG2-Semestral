@@ -6,10 +6,14 @@ package utils;
  */
 public interface ITagEditable {
 
+    public void updatePath(String newFileName);
+
+    public String getAbsolutePath();
+
     public String getArtist();
-
+    public String getYear();
     public String getAlbum();
-
+    public String getTrackNum();
     public String getTitle();
 
     public String toStringFormatted(int artistLen, int albumLen, int titleLen);

@@ -2,7 +2,7 @@
 
 ## Zadání práce
 
-Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspace naimportuje mp3 soubory, se kterými bude chtít nějakým způsobem pracovat. Program bude nabízet operace pro jednotlivé soubory (editace tagu, výpis informací, přejmenování podle tagu a obráceně, ...) a hromadné operace pro všechny soubory ve workspace (výpis do txt, hromadné přejmenování, ...). Pro zjednodušení se pracuje pouze s ID3V2 tagy: číslo stopy, skladba, interpret, album a rok.
+Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspace naimportuje mp3 soubory, se kterými bude chtít nějakým způsobem pracovat. Program bude nabízet operace pro jednotlivé soubory (editace tagu, výpis informací, přejmenování podle tagu) a hromadné operace pro všechny soubory ve workspace (výpis do txt, hromadné přejmenování). Pro zjednodušení se pracuje pouze s ID3v2 tagy: číslo stopy, skladba, interpret, album a rok.
 
 ## Návrh řešení
 
@@ -19,14 +19,14 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 ## // TODO
 
 * ~~Editace všech tagů pro jeden soubor~~
-* Přejmenování podle tagu a vice versa
+* ~~Přejmenování podle tagu~~
 * Hromadná editace/přejmenování
 * ~~Použít enum typ~~
-* Více možností pro přidávání/odebírání souborů z workspace
 * Sortování
 * Práce s textovými a binárními soubory
   * Výpis do txt
   * mp3 cut (?)
+* Album cover (???)
 
 ## Known issues
 
@@ -37,12 +37,12 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 
 ### Funkční a technické požadavky na aplikaci
 
-1. Menu, které umožní opakovaný výběr funkcí aplikácie a ukončení aplikace
+1. Menu, které umožní opakovaný výběr funkcí aplikace a ukončení aplikace ✓
 2. Přehledný výpis výsledků na konzoli - použijte alespoň jednou String.format() a StringBuilder ✓
 3. Načítání vstupních dat z minimálně dvou souborů
    * Vstupní data jsou samotné mp3 soubory
 4. Zápis výstupních dat do souboru
-5. Možnosť práce s textovými a binárními soubory (alespoň někde)
+5. Možnost práce s textovými a binárními soubory (alespoň někde)
    * mp3, txt, ...
 6. Ideálně využití reálných otevřených dat
 7. Adresář data se všemi datovými soubory a případně třídu Datastore se statickými metodami, které budou poskytovat další statická data.

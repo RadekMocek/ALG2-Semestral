@@ -4,6 +4,9 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import utils.ITagEditable;
@@ -103,6 +106,21 @@ public class Workspace {
         }
     }
 
+    /**
+     * Odstraní vybranou skladbu z workspace (nikoliv fyzicky)
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     */
+    public void removeFromWorkspace(int userIndex) {
+        audioFiles.remove(userIndex - 1);
+    }
+
+    /**
+     * Odstraní všechny skladby z workspace (nikoliv fyzicky)
+     */
+    public void clearWorkspace() {
+        audioFiles = new ArrayList<>();
+    }
+
     // ####################
     // ### Editace tagů ###
     // ####################
@@ -126,6 +144,62 @@ public class Workspace {
     }
     public void changeTitle(int userIndex, String newTitle) {
         audioFiles.get(userIndex - 1).changeTitle(newTitle);
+    }
+
+    // ####################
+    // ### Přejmenování ###
+    // ####################
+
+    /**
+     * Přejmenuje soubor
+     * ve vtupním řetězci jsou /i, /y, /a, /n a /t nahrazeny za intepret, rok, album, číslo skladby a název skladby; nepovolené znaky jsou nahrazeny podtržítkem
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     * @param pattern String
+     * @throws IOException
+     */
+    public void rename(int userIndex, String pattern) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        ITagEditable audioFile = audioFiles.get(userIndex - 1);
+        char[] chars = pattern.toCharArray();
+
+        for (int i = 0; i < chars.length; i++) {
+            // /i /y /a /n /t
+            if (i != chars.length - 1 && chars[i] == '/') {
+                if (chars[i + 1] == 'i') {
+                    sb.append(audioFile.getArtist().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    i++;
+                }
+                else if (chars[i + 1] == 'y') {
+                    sb.append(audioFile.getYear().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    i++;
+                }
+                else if (chars[i + 1] == 'a') {
+                    sb.append(audioFile.getAlbum().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    i++;
+                }
+                else if (chars[i + 1] == 'n') {
+                    sb.append(audioFile.getTrackNum().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    i++;
+                }
+                else if (chars[i + 1] == 't') {
+                    sb.append(audioFile.getTitle().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    i++;
+                }
+                else sb.append("_");
+            }
+            // Ostatní nepovolené znaky : * ? " < > | \ nahrazeny podtržítkem
+            else if ((Character.toString(chars[i])).matches("[:*?\"<>|\\\\]")) {
+                sb.append("_");
+            }
+            else {
+                sb.append(chars[i]);
+            }
+        }
+
+        String newName = sb.toString() + ".mp3";
+        Path source = Paths.get(audioFile.getAbsolutePath());
+        Files.move(source, source.resolveSibling(newName));
+        audioFile.updatePath(newName);
     }
 
 }
