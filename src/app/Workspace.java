@@ -146,6 +146,26 @@ public class Workspace {
         audioFiles.get(userIndex - 1).changeTitle(newTitle);
     }
 
+    /**
+     * Změní tag interpreta u všech skladeb
+     * @param newArtist String, nový název interpreta
+     */
+    public void changeArtistAll(String newArtist) {
+        for (ITagEditable audioFile : audioFiles) {
+            audioFile.changeArtist(newArtist);
+        }
+    }
+    public void changeYearAll(String newYear) {
+        for (ITagEditable audioFile : audioFiles) {
+            audioFile.changeYear(newYear);
+        }
+    }
+    public void changeAlbumAll(String newAlbum) {
+        for (ITagEditable audioFile : audioFiles) {
+            audioFile.changeAlbum(newAlbum);
+        }
+    }
+
     // ####################
     // ### Přejmenování ###
     // ####################
@@ -200,6 +220,18 @@ public class Workspace {
         Path source = Paths.get(audioFile.getAbsolutePath());
         Files.move(source, source.resolveSibling(newName));
         audioFile.updatePath(newName);
+    }
+
+    /**
+     * Přejmenuje všechny soubory
+     * ve vtupním řetězci jsou /i, /y, /a, /n a /t nahrazeny za intepret, rok, album, číslo skladby a název skladby; nepovolené znaky jsou nahrazeny podtržítkem
+     * @param pattern String
+     * @throws IOException
+     */
+    public void renameAll(String pattern) throws IOException {
+        for (int i = 0; i < audioFiles.size(); i++) {
+            rename(i + 1, pattern);
+        }
     }
 
 }

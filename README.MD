@@ -20,7 +20,7 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 
 * ~~Editace všech tagů pro jeden soubor~~
 * ~~Přejmenování podle tagu~~
-* Hromadná editace/přejmenování
+* ~~Hromadná editace/přejmenování~~
 * ~~Použít enum typ~~
 * Sortování
 * Práce s textovými a binárními soubory

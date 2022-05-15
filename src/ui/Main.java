@@ -181,16 +181,25 @@ public class Main {
                     break;
                 }
                 else if (actionNumber == 1) {
-
+                    System.out.println("Zadejte nový název interpreta (ponechte prázdné pro odstranění hodnoty z tagu):");
+                    input = sc.nextLine();
+                    changeArtistAll(input);
                 }
                 else if (actionNumber == 2) {
-
+                    System.out.println("Zadejte nový rok (ponechte prázdné pro odstranění hodnoty z tagu):");
+                    input = sc.nextLine();
+                    changeYearAll(input);
                 }
                 else if (actionNumber == 3) {
-
+                    System.out.println("Zadejte nový název alba (ponechte prázdné pro odstranění hodnoty z tagu):");
+                    input = sc.nextLine();
+                    changeAlbumAll(input);
                 }
                 else if (actionNumber == 4) {
-
+                    System.out.println("Zadejte pattern pro přejmenování (použijte /i /y /a /n /t):");
+                    input = sc.nextLine();
+                    renameAll(input);
+                    break;
                 }
                 else if (actionNumber == 5) {
 
@@ -251,7 +260,7 @@ public class Main {
     // ####################
 
     /**
-     * Tag – změna interpreta
+     * Tag – změna interpreta pro jednu zvolenou skladbu
      * @param newArtist String, nový název interpreta
      */
     private static void changeArtist(String newArtist) {
@@ -295,6 +304,35 @@ public class Main {
         }
     }
 
+    /**
+     * Tag – změna interpreta pro všechny skladby ve workspace
+     * @param newArtist String, nový název interpreta
+     */
+    private static void changeArtistAll(String newArtist) {
+        try {
+            ws.changeArtistAll(newArtist);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    private static void changeYearAll(String newYear) {
+        try {
+            ws.changeYearAll(newYear);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    private static void changeAlbumAll(String newAlbum) {
+        try {
+            ws.changeAlbumAll(newAlbum);
+        }
+        catch(RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     // ####################
     // ### Přejmenování ###
     // ####################
@@ -308,6 +346,22 @@ public class Main {
             ws.rename(chosenTrack, pattern);
         } catch (IOException ex) {
             System.out.println("Chyba při přejmenování souboru: " + ex);
+        } catch (RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    /**
+     * Přejmenování souborů
+     * @param pattern String
+     */
+    private static void renameAll(String pattern) {
+        try {
+            ws.renameAll(pattern);
+        } catch (IOException ex) {
+            System.out.println("Chyba při přejmenování souborů: " + ex);
+        } catch (RuntimeException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
