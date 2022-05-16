@@ -22,9 +22,9 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 * ~~Přejmenování podle tagu~~
 * ~~Hromadná editace/přejmenování~~
 * ~~Použít enum typ~~
-* Sortování
+* ~~Sortování~~
 * Práce s textovými a binárními soubory
-  * Výpis do txt
+  * ~~Výpis do txt~~
   * mp3 cut (?)
 * Album cover (???)
 
@@ -56,7 +56,7 @@ Program slouží pro editaci tagů u mp3 souborů. Uživatel si do tzv. workspac
 11. Použít enum typ ✓
 12. Použití kontejnerové třídy jazyka Java (ArrayList, LinkedList, HashMap ...) z Collections frameworku. ✓
     * Třída Workspace má kolekci objektů typu AudioFile
-13. Alespoň dvě možnosti třídění s využitím rozhraní Comparable a Comparator
+13. Alespoň dvě možnosti třídění s využitím rozhraní Comparable a Comparator ✓
     * Sortování AudioFiles ve Workspace podle různých parametrů
 14. Použití regulárního výrazu ✓
 15. Ošetření vstupů, aby chybné vstupy nezpůsobily pád programu - pomocí existujících a vlastních výjimek

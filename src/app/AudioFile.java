@@ -54,7 +54,7 @@ public class AudioFile implements ITagEditable {
     public void updatePath(String newFileName) {
         try {
             String oldPath = file.getFilename();
-            file = new Mp3File(oldPath.substring(0, oldPath.lastIndexOf(File.separator)) + "/" + newFileName);
+            file = new Mp3File(oldPath.substring(0, oldPath.lastIndexOf(File.separator)) + File.separator + newFileName);
             tag = file.getId3v2Tag();
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
             throw new RuntimeException("Chyba při aktulaizování cesty k souboru.");
@@ -72,6 +72,15 @@ public class AudioFile implements ITagEditable {
     @Override
     public String getAbsolutePath() {
         return file.getFilename();
+    }
+
+    /**
+     * Vrátí délku skladby v sekundách
+     * @return long
+     */
+    @Override
+    public long getLengthInSeconds() {
+        return file.getLengthInSeconds();
     }
 
     /**
@@ -273,6 +282,15 @@ public class AudioFile implements ITagEditable {
         originalFile.renameTo(oldFile);
         retaggedFile.renameTo(originalFile);
         oldFile.delete();
+    }
+
+    // #################
+    // ### Sortování ###
+    // #################
+
+    @Override
+    public int compareTo(ITagEditable other) {
+        return this.getAbsolutePath().compareTo(other.getAbsolutePath());
     }
 
 }

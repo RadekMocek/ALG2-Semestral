@@ -63,7 +63,7 @@ public class Main {
             }
             // - sort
             else if (input.equals("sort")) {
-
+                submenuSort();
             }
             // - clear
             else if (input.equals("clear")) {
@@ -202,7 +202,55 @@ public class Main {
                     break;
                 }
                 else if (actionNumber == 5) {
+                    System.out.println("Zadejte pattern použitý na řádcích výpisu (použijte /i /y /a /n /t):");
+                    input = sc.nextLine();
+                    generateDescription(input);
+                    break;
+                }
+                else {
+                    System.out.println("Akce s takovým číslem neexistuje.");
+                }
+            }
+            else {
+                System.out.println("Zadejte číslo akce, kterou chcete provést.");
+            }
+        }
+    }
 
+    /**
+     * Menu pro řazení skladeb
+     */
+    private static void submenuSort() {
+        String menu = """
+                      1. Seřadit podle názvu souboru
+                      2. Seřadit podle interpret - rok - číslo skladby
+                      3. Seřadit podle roku
+                      4. Seřadit podle délky skladby
+                      0. Zpět""";
+        String input;
+        while (true) {
+            System.out.println(menu);
+            input = sc.nextLine();
+            if (StringTools.tryParseToInt(input)) {
+                int actionNumber = Integer.parseInt(input);
+                if (actionNumber == 0) {
+                    break;
+                }
+                else if (actionNumber == 1) {
+                    ws.sortByFileName();
+                    break;
+                }
+                else if (actionNumber == 2) {
+                    ws.sortByArtistYearTrackNum();
+                    break;
+                }
+                else if (actionNumber == 3) {
+                    ws.sortByYear();
+                    break;
+                }
+                else if (actionNumber == 4) {
+                    ws.sortByDuration();
+                    break;
                 }
                 else {
                     System.out.println("Akce s takovým číslem neexistuje.");
@@ -372,5 +420,13 @@ public class Main {
     /// ######################
     /// ### Ostatní metody ###
     /// ######################
+
+    private static void generateDescription(String pattern) {
+        try {
+            ws.generateDescription(pattern);
+        } catch (IOException ex) {
+            System.out.println("Chyba: Nepodařilo se zapsat soubor: " + ex);
+        }
+    }
 
 }

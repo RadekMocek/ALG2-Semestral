@@ -2,14 +2,21 @@ package app;
 
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import utils.ITagEditable;
+import utils.StringTools;
+import utils.TimeTools;
 
 /**
  * Třída uchovává mp3 soubory a umožňuje s nimi manipulovat, poskytuje metody pro UI
@@ -77,6 +84,8 @@ public class Workspace {
      * @param path Absolutní cesta ke složce (String)
      */
     public void openFolder(String path) {
+        clearWorkspace();
+
         File[] listOfFiles = new File(path).listFiles();
 
         if (listOfFiles == null) {
@@ -231,6 +240,109 @@ public class Workspace {
     public void renameAll(String pattern) throws IOException {
         for (int i = 0; i < audioFiles.size(); i++) {
             rename(i + 1, pattern);
+        }
+    }
+
+    // #################
+    // ### Sortování ###
+    // #################
+
+    /**
+     * Seřazení podle názvu souboru
+     */
+    public void sortByFileName() {
+        Collections.sort(audioFiles);
+    }
+
+    private static final Comparator<ITagEditable> COMP_BY_ARTIST_YEAR_TRACKNUM = (ITagEditable t1, ITagEditable t2) -> {
+        int value = t1.getArtist().compareTo(t2.getArtist());
+        if (value == 0) value = t1.getYear().compareTo(t2.getYear());
+        if (value == 0) {
+            String tn1 = t1.getTrackNum();
+            String tn2 = t2.getTrackNum();
+            if (StringTools.tryParseToInt(tn1) && StringTools.tryParseToInt(tn2)) value = Integer.compare(Integer.parseInt(tn1), Integer.parseInt(tn2));
+            else value = t1.getTrackNum().compareTo(t2.getTrackNum());
+        }
+        return value;
+    };
+
+    /**
+     * Seřadí podle interpret - rok - číslo skladby
+     */
+    public void sortByArtistYearTrackNum() {
+        Collections.sort(audioFiles, COMP_BY_ARTIST_YEAR_TRACKNUM);
+    }
+
+    /**
+     * Seřazení podle roku
+     */
+    public void sortByYear() {
+        Collections.sort(audioFiles, (ITagEditable t1, ITagEditable t2) -> t1.getYear().compareTo(t2.getYear()));
+    }
+
+    /**
+     * Seřazení podle délky skladby
+     */
+    public void sortByDuration() {
+        Collections.sort(audioFiles, (ITagEditable t1, ITagEditable t2) -> Long.compare(t1.getLengthInSeconds(), t2.getLengthInSeconds()));
+    }
+
+    /// ######################
+    /// ### Ostatní metody ###
+    /// ######################
+
+    /**
+     * Generuje soubor description.txt (ve stejné složce, kde se nacházejí soubory z workspace), co řádek to skladba, seřazeno podle aktuálního seřazení workspace,
+     * na každém řádku je timestamp skladby relativní ke skladbám předcházejícím (první řádek tedy vždy 0:00; vhodné pro youtube video description), poté následuje pattern
+     * @param pattern String, sekvence /i, /y, /a, /n a /t jsou nahrazeny za intepret, rok, album, číslo skladby a název skladby
+     * @throws IOException
+     */
+    public void generateDescription(String pattern) throws IOException {
+        String path = audioFiles.get(0).getAbsolutePath();
+        File result =  new File(path.substring(0, path.lastIndexOf(File.separator)) + File.separator + "description.txt");
+        long totalDuration = 0;
+        long fileDuration;
+        StringBuilder sb;
+        char[] chars = pattern.toCharArray();;
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(result)))) {
+            for (ITagEditable audioFile : audioFiles) {
+                // Zapsat timestamp
+                pw.print(TimeTools.longToString(totalDuration) + " ");
+                // Zapsat pattern
+                sb = new StringBuilder();
+                for (int i = 0; i < chars.length; i++) {
+                    if (i != chars.length - 1 && chars[i] == '/') {
+                        if (chars[i + 1] == 'i') {
+                            sb.append(audioFile.getArtist());
+                            i++;
+                        }
+                        else if (chars[i + 1] == 'y') {
+                            sb.append(audioFile.getYear());
+                            i++;
+                        }
+                        else if (chars[i + 1] == 'a') {
+                            sb.append(audioFile.getAlbum());
+                            i++;
+                        }
+                        else if (chars[i + 1] == 'n') {
+                            sb.append(audioFile.getTrackNum());
+                            i++;
+                        }
+                        else if (chars[i + 1] == 't') {
+                            sb.append(audioFile.getTitle());
+                            i++;
+                        }
+                        else sb.append("/");
+                    }
+                    else {
+                        sb.append(chars[i]);
+                    }
+                }
+                pw.println(sb.toString());
+                // Inkrementovat timestamp
+                fileDuration = audioFile.getLengthInSeconds();
+                totalDuration += fileDuration;
+            }
         }
     }
 

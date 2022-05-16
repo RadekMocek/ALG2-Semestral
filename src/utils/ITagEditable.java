@@ -4,11 +4,12 @@ package utils;
  * Rozhraní, které by měla implementovat každá třída reprezentující audio soubor, u kterého je možné měnit tagy
  * @author Radek Mocek
  */
-public interface ITagEditable {
+public interface ITagEditable extends Comparable<ITagEditable> {
 
     public void updatePath(String newFileName);
 
     public String getAbsolutePath();
+    public long getLengthInSeconds();
 
     public String getArtist();
     public String getYear();
