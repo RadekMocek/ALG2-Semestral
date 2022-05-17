@@ -1,7 +1,8 @@
 package app;
 
 import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.ID3v24Tag;
+import com.mpatric.mp3agic.ID3v23Tag;
+//import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
@@ -37,7 +38,7 @@ public class AudioFile implements ITagEditable {
             tag = file.getId3v2Tag();
         }
         else {
-            tag = new ID3v24Tag();
+            tag = new ID3v23Tag();
             file.setId3v2Tag(tag);
         }
         // S ID3v1 tagy nevyjednáváme ((these days doporučuje se buď jim nastavovat identickou hodnotu jako v2 tagům, nebo je smazat))
@@ -238,7 +239,7 @@ public class AudioFile implements ITagEditable {
      * @param field enum, Která hodnota má být odstraněna
      */
     private void clearTagFieldValue(TagField field) {
-        ID3v2 newTag = new ID3v24Tag();
+        ID3v2 newTag = new ID3v23Tag();
         if (field != TagField.artist) newTag.setArtist(tag.getArtist());
         if (field != TagField.year) newTag.setYear(tag.getYear());
         if (field != TagField.album) newTag.setAlbum(tag.getAlbum());

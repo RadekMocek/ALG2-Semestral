@@ -1,6 +1,8 @@
 package ui;
 
+import app.BinaryReader;
 import app.Workspace;
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import utils.StringTools;
@@ -29,10 +31,6 @@ public class Main {
         sc = new Scanner(System.in);
         ws = new Workspace();
         String input;
-
-        // Z testovacích důvodů
-        try {ws.openFolder("D:\\Kod\\ALG2\\Semestral\\testData2");}catch(RuntimeException ex){System.out.println(ex.getMessage());}
-        // --------------------
 
         // Hlavní smyčka
         while (true) {
@@ -103,6 +101,7 @@ public class Main {
                       5. Změnit skladbu
                       6. Přejmenovat podle tagu
                       7. Odebrat soubor z workspace
+                      8. Vyčíst informace o tagu ze souboru (binárně)
                       0. Zpět""";
         String input;
         while (true) {
@@ -148,6 +147,10 @@ public class Main {
                 }
                 else if (actionNumber == 7) {
                     ws.removeFromWorkspace(chosenTrack);
+                    break;
+                }
+                else if (actionNumber == 8) {
+                    displayBinaryInfo();
                     break;
                 }
                 else {
@@ -271,7 +274,7 @@ public class Main {
      */
     private static void displayHelp() {
         String help = """
-                      * 'open'  – Přidat nové soubory do workspace
+                      * 'open'  – Vybrat složku se soubory
                       * 'all'   – Provést akci pro všechny soubory ve workspace
                       * 'sort'  – Seřadit soubory ve workspace
                       * Napsání čísla skladby – provést akci pro jeden konkrétní soubor (první číslo na každém řádku ve workspace)
@@ -413,20 +416,35 @@ public class Main {
         }
     }
 
-    // #################
-    // ### Sortování ###
-    // #################
-
     /// ######################
     /// ### Ostatní metody ###
     /// ######################
 
+    /**
+     * Generuje soubor description.txt
+     * @param pattern
+     */
     private static void generateDescription(String pattern) {
         try {
             ws.generateDescription(pattern);
         } catch (IOException ex) {
             System.out.println("Chyba: Nepodařilo se zapsat soubor: " + ex);
         }
+    }
+
+    /**
+     * Zobrazí výpis informací získaných z ID3v2.3.x tagu aktuálně vybrané skladby
+     */
+    private static void displayBinaryInfo() {
+        try {
+            System.out.println(BinaryReader.getMp3Info(new File(ws.getAbsolutePath(chosenTrack))));
+        } catch (IOException ex) {
+            System.out.println("Chyba při čtení souboru: " + ex);
+        } catch (Exception ex) {
+            System.out.println("Nastala neočekávaná chyba: " + ex);
+        }
+        System.out.println("Stiskněte enter pro návrat do workspace.");
+        sc.nextLine();
     }
 
 }

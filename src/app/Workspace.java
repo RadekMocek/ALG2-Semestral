@@ -80,6 +80,15 @@ public class Workspace {
     }
 
     /**
+     * Vrátí String s absolutní cestou k danému souboru
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     * @return String
+     */
+    public String getAbsolutePath(int userIndex) {
+        return audioFiles.get(userIndex - 1).getAbsolutePath();
+    }
+
+    /**
      * V zadané složce najde všechny mp3 soubory a přidá je do workspace
      * @param path Absolutní cesta ke složce (String)
      */
@@ -195,23 +204,33 @@ public class Workspace {
             // /i /y /a /n /t
             if (i != chars.length - 1 && chars[i] == '/') {
                 if (chars[i + 1] == 'i') {
-                    sb.append(audioFile.getArtist().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    String artist = audioFile.getArtist();
+                    if (artist == null) sb.append("null");
+                    else sb.append(artist.replaceAll("[/:*?\"<>|\\\\]", "_"));
                     i++;
                 }
                 else if (chars[i + 1] == 'y') {
-                    sb.append(audioFile.getYear().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    String year = audioFile.getYear();
+                    if (year == null) sb.append("null");
+                    else sb.append(year.replaceAll("[/:*?\"<>|\\\\]", "_"));
                     i++;
                 }
                 else if (chars[i + 1] == 'a') {
-                    sb.append(audioFile.getAlbum().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    String album = audioFile.getAlbum();
+                    if (album == null) sb.append("null");
+                    else sb.append(album.replaceAll("[/:*?\"<>|\\\\]", "_"));
                     i++;
                 }
                 else if (chars[i + 1] == 'n') {
-                    sb.append(audioFile.getTrackNum().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    String trackNum = audioFile.getTrackNum();
+                    if (trackNum == null) sb.append("null");
+                    else sb.append(trackNum.replaceAll("[/:*?\"<>|\\\\]", "_"));
                     i++;
                 }
                 else if (chars[i + 1] == 't') {
-                    sb.append(audioFile.getTitle().replaceAll("[/:*?\"<>|\\\\]", "_"));
+                    String title = audioFile.getTitle();
+                    if (title == null) sb.append("null");
+                    else sb.append(title.replaceAll("[/:*?\"<>|\\\\]", "_"));
                     i++;
                 }
                 else sb.append("_");
