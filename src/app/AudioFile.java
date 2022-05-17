@@ -112,7 +112,7 @@ public class AudioFile implements ITagEditable {
     }
 
     /**
-     * Vrací číslo skladby uložené v ID3v2 tagu
+     * Vrací číslo stopy uložené v ID3v2 tagu
      * @return String
      */
     @Override

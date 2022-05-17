@@ -3,6 +3,7 @@ package ui;
 import app.BinaryReader;
 import app.Workspace;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 import utils.StringTools;
@@ -31,6 +32,17 @@ public class Main {
         sc = new Scanner(System.in);
         ws = new Workspace();
         String input;
+
+        try {
+            // Pokusit se obnovit workspace z minule
+            String path = UIFileImporter.loadWorkspaceLocation();
+            ws.openFolder(path);
+        } catch(FileNotFoundException ex) {
+            // Soubor ještě neexistuje – první spuštění programu nebo bylo použito 'clear', netřeba strašit uživatele chybovou hláškou
+        } catch (IOException ex) {
+            System.out.println("Nepodařilo se obnovit workspace z minulé session.");
+            UIFileImporter.clearWorkspaceLocation();
+        }
 
         // Hlavní smyčka
         while (true) {
@@ -66,6 +78,7 @@ public class Main {
             // - clear
             else if (input.equals("clear")) {
                 ws.clearWorkspace();
+                UIFileImporter.clearWorkspaceLocation();
             }
             // - help
             else if (input.equals("help")) {
@@ -98,7 +111,7 @@ public class Main {
                       2. Změnit rok
                       3. Změnit album
                       4. Změnit číslo stopy
-                      5. Změnit skladbu
+                      5. Změnit název skladby
                       6. Přejmenovat podle tagu
                       7. Odebrat soubor z workspace
                       8. Vyčíst informace o tagu ze souboru (binárně)
@@ -226,7 +239,7 @@ public class Main {
     private static void submenuSort() {
         String menu = """
                       1. Seřadit podle názvu souboru
-                      2. Seřadit podle interpret - rok - číslo skladby
+                      2. Seřadit podle interpret - rok - číslo stopy
                       3. Seřadit podle roku
                       4. Seřadit podle délky skladby
                       0. Zpět""";
@@ -293,16 +306,23 @@ public class Main {
      * Umožní uživateli grafický výběr složky s hudbou, která se "importuje" do workspace
      */
     private static void openFolderGUI() {
-        String path = FileDialog.selectFolderGUI();
+        String path = UIFileImporter.selectFolderGUI();
         if (path == null) {
             System.out.println("Výběr složky byl zrušen.");
             return;
         }
         try {
             ws.openFolder(path);
+            UIFileImporter.saveWorkspaceLocation(path);
         }
         catch (RuntimeException ex) {
-            System.out.println(ex.getMessage());
+            System.out.println(ex + ": " + ex.getMessage());
+        }
+        catch (FileNotFoundException ex) {
+            System.out.println(ex + ": " + ex.getMessage());
+        }
+        catch (IOException ex) {
+            System.out.println(ex + ": " + ex.getMessage());
         }
     }
 

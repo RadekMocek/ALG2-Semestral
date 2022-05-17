@@ -190,7 +190,7 @@ public class Workspace {
 
     /**
      * Přejmenuje soubor
-     * ve vtupním řetězci jsou /i, /y, /a, /n a /t nahrazeny za intepret, rok, album, číslo skladby a název skladby; nepovolené znaky jsou nahrazeny podtržítkem
+     * ve vtupním řetězci jsou /i, /y, /a, /n a /t nahrazeny za intepret, rok, album, číslo stopy a název skladby; nepovolené znaky jsou nahrazeny podtržítkem
      * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
      * @param pattern String
      * @throws IOException
@@ -252,7 +252,7 @@ public class Workspace {
 
     /**
      * Přejmenuje všechny soubory
-     * ve vtupním řetězci jsou /i, /y, /a, /n a /t nahrazeny za intepret, rok, album, číslo skladby a název skladby; nepovolené znaky jsou nahrazeny podtržítkem
+     * ve vtupním řetězci jsou /i, /y, /a, /n a /t nahrazeny za intepret, rok, album, číslo stopy a název skladby; nepovolené znaky jsou nahrazeny podtržítkem
      * @param pattern String
      * @throws IOException
      */
@@ -274,19 +274,32 @@ public class Workspace {
     }
 
     private static final Comparator<ITagEditable> COMP_BY_ARTIST_YEAR_TRACKNUM = (ITagEditable t1, ITagEditable t2) -> {
-        int value = t1.getArtist().compareTo(t2.getArtist());
-        if (value == 0) value = t1.getYear().compareTo(t2.getYear());
+        String artist = t1.getArtist();
+        String otherArtist = t2.getArtist();
+        int value;
+        if (artist == null) artist = " ";// || otherArtist == null) value = 0;
+        if (otherArtist == null) otherArtist = " ";
+        value = artist.compareTo(otherArtist);
+        if (value == 0) {
+            String year = t1.getYear();
+            String otherYear = t2.getYear();
+            if (year == null) year = "0000";// || otherYear == null) value = 0;
+            if (otherYear == null) otherYear = "0000";
+            value = year.compareTo(otherYear);
+        }
         if (value == 0) {
             String tn1 = t1.getTrackNum();
             String tn2 = t2.getTrackNum();
+            if (tn1 == null) tn1 = "0";// || tn2 == null) value = 0;
+            if (tn2 == null) tn2 = "0";
             if (StringTools.tryParseToInt(tn1) && StringTools.tryParseToInt(tn2)) value = Integer.compare(Integer.parseInt(tn1), Integer.parseInt(tn2));
-            else value = t1.getTrackNum().compareTo(t2.getTrackNum());
+            else value = tn1.compareTo(tn2);
         }
         return value;
     };
 
     /**
-     * Seřadí podle interpret - rok - číslo skladby
+     * Seřadí podle interpret - rok - číslo stopy
      */
     public void sortByArtistYearTrackNum() {
         Collections.sort(audioFiles, COMP_BY_ARTIST_YEAR_TRACKNUM);
@@ -296,7 +309,17 @@ public class Workspace {
      * Seřazení podle roku
      */
     public void sortByYear() {
-        Collections.sort(audioFiles, (ITagEditable t1, ITagEditable t2) -> t1.getYear().compareTo(t2.getYear()));
+        Collections.sort(audioFiles, new Comparator<ITagEditable>() {
+            @Override
+            public int compare(ITagEditable t1, ITagEditable t2) {
+                String year = t1.getYear();
+                String otherYear = t2.getYear();
+                if (year == null) year = "0000";// || otherYear == null) value = 0;
+                if (otherYear == null) otherYear = "0000";
+                int value = year.compareTo(otherYear);
+                return value;
+            }
+        });
     }
 
     /**
@@ -313,7 +336,7 @@ public class Workspace {
     /**
      * Generuje soubor description.txt (ve stejné složce, kde se nacházejí soubory z workspace), co řádek to skladba, seřazeno podle aktuálního seřazení workspace,
      * na každém řádku je timestamp skladby relativní ke skladbám předcházejícím (první řádek tedy vždy 0:00; vhodné pro youtube video description), poté následuje pattern
-     * @param pattern String, sekvence /i, /y, /a, /n a /t jsou nahrazeny za intepret, rok, album, číslo skladby a název skladby
+     * @param pattern String, sekvence /i, /y, /a, /n a /t jsou nahrazeny za intepret, rok, album, číslo stopy a název skladby
      * @throws IOException
      */
     public void generateDescription(String pattern) throws IOException {

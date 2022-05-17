@@ -14,6 +14,8 @@ import java.util.Arrays;
  */
 public class BinaryReader {
 
+    private BinaryReader() {}
+
     /**
      * Vrací výpis informací získaných z ID3v2.3.x tagu
      * @param file

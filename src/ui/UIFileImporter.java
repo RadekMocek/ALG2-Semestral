@@ -2,15 +2,27 @@ package ui;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
 /**
- * Pomocná UI třída pro výběr souborů/složek
+ * Pomocná UI třída pro výběr přidání souborů do workspace
  * @author Radek Mocek
  */
-public class FileDialog {
+public class UIFileImporter {
+
+    private UIFileImporter() {}
+
+    // ##############################
+    // ### Otevřít nový workspace ###
+    // ##############################
 
     /**
      * Zobrazí uživateli dialog s výzvou výběru složky, vrací String s absolutní cestou této složky nebo <code>null</code>, pokud uživatel zruší výběr
@@ -42,6 +54,31 @@ public class FileDialog {
             return null;
         }
         return (fc.getSelectedFile().toString());
+    }
+
+    // ###############################
+    // ### Uložit/načíst workspace ###
+    // ###############################
+
+    private final static String WORKSPACE_LOCATION_PATH = "data" + File.separator + "state.audiows";
+
+    static void saveWorkspaceLocation(String path) throws FileNotFoundException, IOException {
+        try (DataOutputStream out = new DataOutputStream(new FileOutputStream(WORKSPACE_LOCATION_PATH, false))) {
+            out.writeUTF(path);
+        }
+    }
+
+    static String loadWorkspaceLocation() throws FileNotFoundException, IOException {
+        String rtrn;
+        try (DataInputStream in = new DataInputStream(new FileInputStream(WORKSPACE_LOCATION_PATH))) {
+            rtrn = in.readUTF();
+        }
+        return rtrn;
+    }
+
+    static void clearWorkspaceLocation() {
+        File state = new File(WORKSPACE_LOCATION_PATH);
+        state.delete();
     }
 
 }
