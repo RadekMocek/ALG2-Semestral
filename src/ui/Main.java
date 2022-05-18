@@ -342,6 +342,11 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Tag – změna roku pro jednu zvolenou skladbu
+     * @param newYear String, nový rok
+     */
     private static void changeYear(String newYear) {
         try {
             ws.changeYear(chosenTrack, newYear);
@@ -350,6 +355,11 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Tag – změna almba pro jednu zvolenou skladbu
+     * @param newAlbum String, nový název alba
+     */
     private static void changeAlbum(String newAlbum) {
         try {
             ws.changeAlbum(chosenTrack, newAlbum);
@@ -358,6 +368,11 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Tag – změna čísla stopy pro jednu zvolenou skladbu
+     * @param newTrackNum String, nové číslo stopy
+     */
     private static void changeTrackNum(String newTrackNum) {
         try {
             ws.changeTrackNum(chosenTrack, newTrackNum);
@@ -366,6 +381,11 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Tag – změna názvu skladby pro jednu zvolenou skladbu
+     * @param newTitle String, nový název skladby
+     */
     private static void changeTitle(String newTitle) {
         try {
             ws.changeTitle(chosenTrack, newTitle);
@@ -387,6 +407,11 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Tag – změna roku pro všechny skladby ve workspace
+     * @param newYear String, nový rok
+     */
     private static void changeYearAll(String newYear) {
         try {
             ws.changeYearAll(newYear);
@@ -395,6 +420,11 @@ public class Main {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Tag – změna alba pro všechny skladby ve workspace
+     * @param newAlbum String, nový název alba
+     */
     private static void changeAlbumAll(String newAlbum) {
         try {
             ws.changeAlbumAll(newAlbum);

@@ -209,24 +209,44 @@ public class AudioFile implements ITagEditable {
         }
         saveTags();
     }
+
+    /**
+     * Změní rok
+     * @param newYear String, nový rok
+     */
     @Override
     public void changeYear(String newYear) {
         if ("".equals(newYear)) {clearTagFieldValue(TagField.year);}
         else {tag.setYear(newYear);}
         saveTags();
     }
+
+    /**
+     * Změní název alba
+     * @param newAlbum String, nové album
+     */
     @Override
     public void changeAlbum(String newAlbum) {
         if ("".equals(newAlbum)) {clearTagFieldValue(TagField.album);}
         else {tag.setAlbum(newAlbum);}
         saveTags();
     }
+
+    /**
+     * Změní číslo stopy
+     * @param changeTrackNum String, nové číslo stopy
+     */
     @Override
     public void changeTrackNum(String changeTrackNum) {
         if ("".equals(changeTrackNum)) {clearTagFieldValue(TagField.trackNum);}
         else {tag.setTrack(changeTrackNum);}
         saveTags();
     }
+
+    /**
+     * Změní název skladby
+     * @param newTitle String, nový název skladby
+     */
     @Override
     public void changeTitle(String newTitle) {
         if ("".equals(newTitle)) {clearTagFieldValue(TagField.title);}
@@ -289,6 +309,11 @@ public class AudioFile implements ITagEditable {
     // ### Sortování ###
     // #################
 
+    /**
+     * Seřazení podle absolutní cesty k souboru
+     * @param other
+     * @return
+     */
     @Override
     public int compareTo(ITagEditable other) {
         return this.getAbsolutePath().compareTo(other.getAbsolutePath());

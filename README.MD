@@ -15,34 +15,36 @@ Menu v aplikaci je kombinací zadávání příkazů a vybírání z číselnéh
 * `help` – Zobrazit nápovědu
 * `exit` – Ukončit aplikaci
 * Napsat číslo skladby ve ws pro provedení akce s danou skladbou, poté se zobrazí číselné menu:
-  1. Změna interpreta
-  2. Změna roku
-  3. Změna alba
-  4. Změna čísla stopy
-  5. Změna názvu skladby
-  6. Přejmenování podle tagu – při volbě nového názvu souboru lze použít "modifikátory" `/i`, `/y`, `/a`, `/n` a `/t` pro vložení hodnot z tagu do názvu souboru; nepovolené znaky jsou nahrazeny podtržítkem
-  7. Odebrat soubor z ws (pokud nechceme, aby byl zařazen do příkazů ze sady `all`)
-  8. Vyčíst informace o tagu ze souboru (binárně) – program se pokusí binárně přečíst ID3v2.3 header a vypsat vše, co najde  
+  * `1` Změna interpreta
+  * `2` Změna roku
+  * `3` Změna alba
+  * `4` Změna čísla stopy
+  * `5` Změna názvu skladby
+  * `6` Přejmenování podle tagu – při volbě nového názvu souboru lze použít "modifikátory" `/i`, `/y`, `/a`, `/n` a `/t` pro vložení hodnot z tagu do názvu souboru; nepovolené znaky jsou nahrazeny podtržítkem
+  * `7` Odebrat soubor z ws (pokud nechceme, aby byl zařazen do příkazů ze sady `all`)
+  * `8` Vyčíst informace o tagu ze souboru (binárně) – program se pokusí binárně přečíst ID3v2.3 header a vypsat vše, co najde  
 * `all` – Provést akci pro všechny soubory ve ws, výběr z číselného menu:
-  1. Hromadná změna intepreta pro všechny soubory ve ws
-  2. Hromadná změna roku pro všechny soubory ve ws
-  3. Hromadná změna alba pro všechny soubory ve ws
-  4. Hromadné přejmenování podle tagů – pokud nastane situace, že by se více souborů mělo jmenovat stejně, je přejmenován pouze jeden a akce je předčasně ukončena
-  5. Generace textového souboru `description.txt`, kde jsou pod sebou vypsány soubory tak, jak jsou seřazeny ve ws (lze tedy změnit pomocí `sort`); každý řádek obsahuje timestamp, který by skladbě náležel, kdyby se nacházela v jednom dlouhém videu (audiu); timestamp je youtube friendly (po vložení do popisku videa youtube automaticky vygeneruje kapitoly); lze použít stejné "modifikátory" jako u přejmenování
+  * `1` Hromadná změna intepreta pro všechny soubory ve ws
+  * `2` Hromadná změna roku pro všechny soubory ve ws
+  * `3` Hromadná změna alba pro všechny soubory ve ws
+  * `4` Hromadné přejmenování podle tagů – pokud nastane situace, že by se více souborů mělo jmenovat stejně, je přejmenován pouze jeden a akce je předčasně ukončena
+  * `5` Generace textového souboru `description.txt`, kde jsou pod sebou vypsány soubory tak, jak jsou seřazeny ve ws (lze tedy změnit pomocí `sort`); každý řádek obsahuje timestamp, který by skladbě náležel, kdyby se nacházela v jednom dlouhém videu (audiu); timestamp je youtube friendly (po vložení do popisku videa youtube automaticky vygeneruje kapitoly); lze použít stejné "modifikátory" jako u přejmenování
 * `sort` – Seřadit soubory ve ws, výběr z číselného menu:
-  1. Seřadit podle názvu souboru
-  2. Seřadit podle interpret - rok - číslo stopy
-  3. Seřadit podle roku
-  4. Seřadit podle délky skladby
+  * `1` Seřadit podle názvu souboru
+  * `2` Seřadit podle interpret - rok - číslo stopy
+  * `3` Seřadit podle roku
+  * `4` Seřadit podle délky skladby
 
 ### Struktura vstupních a výstupních souborů
 
 * Do ws lze naimportovat korektní (=nepoškozené) soubory s příponou .mp3 (název jakýkoliv), pokud nemají ID3v2 tag, bude jim vytvořen
-  * Aby mohl být binárně přečten (číslo skladby → 8.), musí se jednat o tag ID3v2.3.x (čtcrtý bajt musí být roven třem) a nemít nastavené žádné flagy (šestý bajt musí být roven nule)
+  * Aby mohl být binárně přečten (číslo skladby → `8`), musí se jednat o tag ID3v2.3.x (čtcrtý bajt musí být roven třem) a nemít nastavené žádné flagy (šestý bajt musí být roven nule)
 * Cesta k ws uložena v `data/state.audiows` je zapsána pomocí `writeUTF` a čtena pomocí `readUTF`
-* Soubor `description.txt` (`all` → 5.) obsahuje na každém řádku timestamp ve formátu "(hh):(m)m:ss" (na prvním řádku je vždy 0:00); co následuje po timestampu, si volí uživatel
+* Soubor `description.txt` (`all` → `5`) obsahuje na každém řádku timestamp ve formátu "(hh):(m)m:ss" (na prvním řádku je vždy 0:00); co následuje po timestampu, si volí uživatel
 
 ### Class diagram
+
+#### Základ
 
 ```mermaid
 classDiagram
@@ -51,14 +53,84 @@ classDiagram
     class Workspace
     class Main
 
+    <<interface>> ITagEditable
+
     AudioFile --|> ITagEditable : implements
-    Workspace *-- "many" ITagEditable : contains    
-    Main *-- "1" Workspace : contains  
+    Workspace *-- "many" ITagEditable : contains
+    Main o-- "1" Workspace : contains
+```
+
+#### Komplet
+
+```mermaid
+classDiagram
+    class ITagEditable
+    class AudioFile
+    class Workspace
+    class Main
+    class BinaryReader
+    class UIFileImporter
+    class StringTools
+    class TimeTools
+
+    <<interface>> ITagEditable
+    <<static>> BinaryReader
+    <<static>> UIFileImporter
+    <<static>> StringTools
+    <<static>> TimeTools
+
+    AudioFile --|> ITagEditable : implements
+    Workspace *-- "many" ITagEditable : contains
+    Main o-- "1" Workspace : contains
+    Main .. BinaryReader : uses
+    Main .. UIFileImporter : uses
+    Main .. StringTools : uses
+    Workspace .. StringTools : uses
+    AudioFile .. TimeTools : uses
+    Workspace .. TimeTools : uses
 ```
 
 ## Externí knihovna
 
-* mp3agic
+* [mp3agic](https://github.com/mpatric/mp3agic)
+
+### Příklady použití
+
+```java
+private Mp3File file;
+private ID3v2 tag;
+
+// ...
+
+file = new Mp3File(path);
+if (file.hasId3v2Tag()) {
+    tag = file.getId3v2Tag();
+}
+else {
+    tag = new ID3v23Tag();
+    file.setId3v2Tag(tag);
+}
+if (file.hasId3v1Tag()) {
+    file.removeId3v1Tag();
+}
+
+// ...
+
+String absolutePath = file.getFilename();
+String artist = tag.getArtist();
+String year = tag.getYear();
+String album = tag.getAlbum();
+String trackNum = tag.getTrack();
+String title = tag.getTitle();
+
+// ...
+
+tag.setArtist(newArtist);
+tag.setYear(newYear);
+tag.setAlbum(newAlbum);
+tag.setTrack(changeTrackNum);
+tag.setTitle(newTitle);
+```
 
 ![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)
 

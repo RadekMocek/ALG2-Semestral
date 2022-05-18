@@ -62,12 +62,24 @@ public class UIFileImporter {
 
     private final static String WORKSPACE_LOCATION_PATH = "data" + File.separator + "state.audiows";
 
+    /**
+     * Uloží cestu k workspace do WORKSPACE_LOCATION_PATH
+     * @param path String, absolutní cesta
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     static void saveWorkspaceLocation(String path) throws FileNotFoundException, IOException {
         try (DataOutputStream out = new DataOutputStream(new FileOutputStream(WORKSPACE_LOCATION_PATH, false))) {
             out.writeUTF(path);
         }
     }
 
+    /**
+     * Vrátí cestu k workspace uloženou v WORKSPACE_LOCATION_PATH
+     * @return String, absolutní cesta
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     static String loadWorkspaceLocation() throws FileNotFoundException, IOException {
         String rtrn;
         try (DataInputStream in = new DataInputStream(new FileInputStream(WORKSPACE_LOCATION_PATH))) {
@@ -76,6 +88,9 @@ public class UIFileImporter {
         return rtrn;
     }
 
+    /**
+     * Odstraní WORKSPACE_LOCATION_PATH
+     */
     static void clearWorkspaceLocation() {
         File state = new File(WORKSPACE_LOCATION_PATH);
         state.delete();

@@ -144,22 +144,46 @@ public class Workspace {
     // ####################
 
     /**
-     * Změní tag interpreta u vybrané skladby
+     * Změní tag interpret u vybrané skladby
      * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
      * @param newArtist String, nový název interpreta
      */
     public void changeArtist(int userIndex, String newArtist) {
         audioFiles.get(userIndex - 1).changeArtist(newArtist);
     }
+
+    /**
+     * Změní tag rok u vybrané skladby
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     * @param newYear String, nový rok
+     */
     public void changeYear(int userIndex, String newYear) {
         audioFiles.get(userIndex - 1).changeYear(newYear);
     }
+
+    /**
+     * Změní tag album u vybrané skladby
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     * @param newAlbum String, nový název alba
+     */
     public void changeAlbum(int userIndex, String newAlbum) {
         audioFiles.get(userIndex - 1).changeAlbum(newAlbum);
     }
+
+    /**
+     * Změní tag číslo stopy u vybrané skladby
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     * @param newTrackNum String, nové číslo stopy
+     */
     public void changeTrackNum(int userIndex, String newTrackNum) {
         audioFiles.get(userIndex - 1).changeTrackNum(newTrackNum);
     }
+
+    /**
+     * Změní tag název skladby u vybrané skladby
+     * @param userIndex int, číslo skladby ve workspace výpisu (indexujeme tedy od jedničky)
+     * @param newTitle String, nový název skladby
+     */
     public void changeTitle(int userIndex, String newTitle) {
         audioFiles.get(userIndex - 1).changeTitle(newTitle);
     }
