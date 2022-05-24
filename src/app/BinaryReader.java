@@ -93,10 +93,8 @@ public class BinaryReader {
             }
             catch (EOFException ex) {
                 sb.append("\nNeočekávaně dosažen konec souboru.");
-                return sb.toString();
             }
         }
-
         sb.append("Konec výpisu.");
         return sb.toString();
     }

@@ -3,7 +3,7 @@
 *.dmg
 *.gz
 *.iso
-*.jar
+#*.jar
 *.rar
 *.tar
 *.zip
@@ -15,18 +15,18 @@
 # Maven 
 target/
 
-# IntelliJ project files 
+# IntelliJ
 *.iml
 *.iws
 *.ipr
 .idea/
 
-# eclipse project file
+# Eclipse
 .settings/
 .classpath
 .project
 
-# NetBeans specific
+# NetBeans
 nbproject/private/
 build/
 nbbuild/
@@ -34,7 +34,6 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
-
 
 # OS
 .DS_Store

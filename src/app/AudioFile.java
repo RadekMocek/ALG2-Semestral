@@ -234,12 +234,12 @@ public class AudioFile implements ITagEditable {
 
     /**
      * Změní číslo stopy
-     * @param changeTrackNum String, nové číslo stopy
+     * @param newTrackNum String, nové číslo stopy
      */
     @Override
-    public void changeTrackNum(String changeTrackNum) {
-        if ("".equals(changeTrackNum)) {clearTagFieldValue(TagField.trackNum);}
-        else {tag.setTrack(changeTrackNum);}
+    public void changeTrackNum(String newTrackNum) {
+        if ("".equals(newTrackNum)) {clearTagFieldValue(TagField.trackNum);}
+        else {tag.setTrack(newTrackNum);}
         saveTags();
     }
 

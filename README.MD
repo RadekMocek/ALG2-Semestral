@@ -128,7 +128,7 @@ String title = tag.getTitle();
 tag.setArtist(newArtist);
 tag.setYear(newYear);
 tag.setAlbum(newAlbum);
-tag.setTrack(changeTrackNum);
+tag.setTrack(newTrackNum);
 tag.setTitle(newTitle);
 ```
 
@@ -145,7 +145,7 @@ tag.setTitle(newTitle);
 5. Možnost práce s textovými a binárními soubory (alespoň někde) ✓
 6. Ideálně využití reálných otevřených dat
 7. Adresář data se všemi datovými soubory a případně třídu Datastore se statickými metodami, které budou poskytovat další statická data ✓
-8. Tri balíčky:
+8. Tři balíčky:
    1. `ui` – třídy, tvořící uživatelské rozhraní - komunikaci s uživatelem ✓
    2. `app` – třídy, tvořící logiku s daty aplikace - modely, kontrolery ✓
    3. `utils` – pomocné třídy např. vlastní výjimky, vlastní rozhraní ✓
