@@ -50,11 +50,11 @@ public class Main {
             System.out.println("Zadejte příkaz ('help' zobrazí nápovědu):");
             input = sc.nextLine();
             // Reakce na příkazy
+            int numberOfTracks = ws.getNumberOfTracks();
             // - číslo skladby
             if (StringTools.tryParseToInt(input)) {
-                int numberOfTracks = ws.getNumberOfTracks();
                 if (numberOfTracks == 0) {
-                    System.out.println("Momentálně nejsou načteny žádné skladby, není tedy z čeho vybírat.");
+                    System.out.println("Workspace je prázdný, není tedy z čeho vybírat.");
                 }
                 else {
                     int temp = Integer.parseInt(input);
@@ -69,11 +69,21 @@ public class Main {
             }
             // - all
             else if (input.equals("all")) {
-                submenuAllTracks();
+                if (numberOfTracks == 0) {
+                    System.out.println("Workspace je prázdný.");
+                }
+                else {
+                    submenuAllTracks();
+                }
             }
             // - sort
             else if (input.equals("sort")) {
-                submenuSort();
+                if (numberOfTracks == 0) {
+                    System.out.println("Workspace je prázdný, není co třídit.");
+                }
+                else {
+                    submenuSort();
+                }
             }
             // - clear
             else if (input.equals("clear")) {
@@ -293,7 +303,7 @@ public class Main {
                       * Napsání čísla skladby – provést akci pro jeden konkrétní soubor (první číslo na každém řádku ve workspace)
                       * 'clear' – Odebere soubory z workspace
                       * 'exit'  – Ukončí aplikaci
-                      Stiskněte enter pro ukončení nápovědy""";
+                      Stiskněte enter pro ukončení nápovědy, poté můžete psát příkazy""";
         System.out.println(help);
         sc.nextLine();
     }

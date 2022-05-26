@@ -291,15 +291,8 @@ public class AudioFile implements ITagEditable {
     private void renameFiles() {
         String filename = file.getFilename();
         File originalFile = new File(filename);
-        //File backupFile = new File(filename + ".bak");
         File retaggedFile = new File(filename + ".retag");
         File oldFile = new File(filename + ".old");
-        /*
-        if (backupFile.exists()) {
-            backupFile.delete();
-        }
-        originalFile.renameTo(backupFile);
-        */
         originalFile.renameTo(oldFile);
         retaggedFile.renameTo(originalFile);
         oldFile.delete();

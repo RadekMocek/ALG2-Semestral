@@ -38,56 +38,52 @@ Menu v aplikaci je kombinací zadávání příkazů a vybírání z číselnéh
 ### Struktura vstupních a výstupních souborů
 
 * Do ws lze naimportovat korektní (=nepoškozené) soubory s příponou .mp3 (název jakýkoliv), pokud nemají ID3v2 tag, bude jim vytvořen
-  * Aby mohl být binárně přečten (číslo skladby → `8`), musí se jednat o tag ID3v2.3.x (čtcrtý bajt musí být roven třem) a nemít nastavené žádné flagy (šestý bajt musí být roven nule)
+  * Aby soubor mohl být binárně přečten (číslo skladby → `8`), musí se jednat o tag ID3v2.3.x (čtvrtý bajt musí být roven třem) a nemít nastavené žádné flagy (šestý bajt musí být roven nule)
 * Cesta k ws uložena v `data/state.audiows` je zapsána pomocí `writeUTF` a čtena pomocí `readUTF`
 * Soubor `description.txt` (`all` → `5`) obsahuje na každém řádku timestamp ve formátu "(hh):(m)m:ss" (na prvním řádku je vždy 0:00); co následuje po timestampu, si volí uživatel
 
 ### Class diagram
 
-#### Základ
+#### Zjednodušeno
 
 ```mermaid
 classDiagram
-    class ITagEditable
-    class AudioFile
-    class Workspace
-    class Main
-
-    <<interface>> ITagEditable
-
-    AudioFile --|> ITagEditable : implements
-    Workspace *-- "many" ITagEditable : contains
-    Main o-- "1" Workspace : contains
-```
-
-#### Komplet
-
-```mermaid
-classDiagram
-    class ITagEditable
-    class AudioFile
-    class Workspace
-    class Main
-    class BinaryReader
-    class UIFileImporter
-    class StringTools
-    class TimeTools
+    class ITagEditable {
+        getAlbum()
+        changeAlbum(String newAlbum)        
+    }
+    class AudioFile {
+        Mp3File file
+        ID3v2 tag
+    }
+    class Workspace {
+        List⟨ITagEditable⟩ audioFiles
+        openFolder()
+        changeAlbum(int userIndex, String newAlbum)
+        changeAlbumAll(String newAlbum)
+        renameAll(String pattern)        
+    }
+    class Main {
+        Scanner sc
+        Workspace ws
+        main()
+    }
+    class BinaryReader {
+        getMp3Info(File file)
+    }
+    class UIFileImporter {
+        selectFolderGUI()
+    }
 
     <<interface>> ITagEditable
     <<static>> BinaryReader
     <<static>> UIFileImporter
-    <<static>> StringTools
-    <<static>> TimeTools
 
     AudioFile --|> ITagEditable : implements
     Workspace *-- "many" ITagEditable : contains
     Main o-- "1" Workspace : contains
     Main .. BinaryReader : uses
     Main .. UIFileImporter : uses
-    Main .. StringTools : uses
-    Workspace .. StringTools : uses
-    AudioFile .. TimeTools : uses
-    Workspace .. TimeTools : uses
 ```
 
 ## Externí knihovna

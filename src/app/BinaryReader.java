@@ -125,6 +125,7 @@ public class BinaryReader {
             case "TPUB" -> "Publisher";
             case "TCOM" -> "Composer";
             case "TSSE" -> "Software/Hardware and settings used for encoding";
+            case "TLAN" -> "Language(s)";
             default -> frameID;
         };
     }
