@@ -86,6 +86,51 @@ classDiagram
     Main .. UIFileImporter : uses
 ```
 
+## Příklad použití
+
+Scénář: uživatel má složku s mp3 soubory, u kterých by rád změnil nějaké tagy:
+
+![img](./_attachments/img/0.PNG)
+
+* Nejprve si tuto složku musíme přidat do workspace příkazem `open` a následným vybráním složky v dialogu:
+* (Příkazy zadané uživatelem jsou vyznačeny žlutě)
+
+![img](./_attachments/img/1.PNG)
+
+![img](./_attachments/img/2.PNG)
+
+* Nyní jsou soubory přidány do ws
+* Čtvrtý soubor ve výpisu má špatně nastavený název interpreta, vybereme ho tedy zadáním čísla `4`
+* Otevře se nám menu s akcemi pro jeden soubor, zadáme `1` pro změnu interpreta a zadáme nový název:
+
+![img](./_attachments/img/3.PNG)
+
+* Soubor má nyní změněný tag:
+
+![img](./_attachments/img/4.PNG)
+
+* Dále bychom rádi opravili název alba pro všechny skladby najednou
+* Příkazem `all` otevřeme menu s hromadnými akcemi pro všechny skladby
+* Zadáním `3` vybereme hromadnou změnu názvu alba a zadáme nový název
+* Poté bychom rádi přejmenovali všechny soubory ve formátu _\<číslo stopy\> - \<název skladby\> \[\<rok\>\]_
+* V nabídce zadáme `4` pro hromadné přejmenování a zadáme pattern `/n - /t [/y]`:
+
+![img](./_attachments/img/5.PNG)
+
+* Soubory nyní mají změněné album a jsou přejmenovány:
+
+![img](./_attachments/img/6.PNG)
+
+* Nakonec bychom chtěli seřadit skladby podle jejich délky a v tomto pořadí vygenerovat popis pro youtube s patternem _\<název skladby\> by \<název interpreta\>_
+* Příkazem `sort` otevřeme nabídku pro seřazení skladeb ve výpisu, možnost `4` je seřadí podle délky
+* Příkazem `all` a možností `5` generujeme popis pro yt, jako pattern zadáme `/t by /y`:
+
+![img](./_attachments/img/7.PNG)
+
+* Takto vypadá vytvořený soubor:
+
+![img](./_attachments/img/8.PNG)
+
 ## Externí knihovna
 
 * [mp3agic](https://github.com/mpatric/mp3agic)
@@ -127,9 +172,9 @@ tag.setAlbum(newAlbum);
 tag.setTrack(newTrackNum);
 tag.setTitle(newTitle);
 ```
-
+<!--
 ![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)![id3v2](https://id3.org/Developer%20Information?action=AttachFile&do=get&target=3d-logo.gif)
-
+-->
 ## Požadavky
 
 ### Funkční a technické požadavky na aplikaci
@@ -139,7 +184,7 @@ tag.setTitle(newTitle);
 3. Načítání vstupních dat z minimálně dvou souborů ✓
 4. Zápis výstupních dat do souboru ✓
 5. Možnost práce s textovými a binárními soubory (alespoň někde) ✓
-6. Ideálně využití reálných otevřených dat
+6. Ideálně využití reálných otevřených dat ~
 7. Adresář data se všemi datovými soubory a případně třídu Datastore se statickými metodami, které budou poskytovat další statická data ✓
 8. Tři balíčky:
    1. `ui` – třídy, tvořící uživatelské rozhraní - komunikaci s uživatelem ✓
@@ -151,8 +196,8 @@ tag.setTitle(newTitle);
 12. Použití kontejnerové třídy jazyka Java (ArrayList, LinkedList, HashMap ...) z Collections frameworku ✓
 13. Alespoň dvě možnosti třídění s využitím rozhraní Comparable a Comparator ✓
 14. Použití regulárního výrazu ✓
-15. Ošetření vstupů, aby chybné vstupy nezpůsobily pád programu - pomocí existujících a vlastních výjimek
-16. Vhodné ošetření povinně ošetřovaných výjimek
+15. Ošetření vstupů, aby chybné vstupy nezpůsobily pád programu - pomocí existujících a vlastních výjimek ✓
+16. Vhodné ošetření povinně ošetřovaných výjimek ✓
 17. Použití Vámi vybrané externí knihovny (audio, posílání emailů, práce s obrázkem, junit testování, jiné formáty uložení dat ...) ✓
 18. Javadoc - každá třída a metoda musí mít javadoc popis, abyste mohli na závěr vygenerovat javadoc dokumentaci ✓
 
